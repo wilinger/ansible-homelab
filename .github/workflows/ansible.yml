@@ -28,8 +28,7 @@ jobs:
       uses: saubermacherag/ansible-playbook-docker-action@v1.4
       with:
         playbookName: 'raspberrypi.yml'
-        inventoryFile: 'inventory/hosts.yaml'
+        inventoryFile: 'inventory/hosts.yml'
         requirementsFile: "requirements.yml"
         rolesPath: "roles"
-        keyFileVaultPass: ${{ secrets.KEYFILE_VAULT_PASS }}
         verbosity: "v"
