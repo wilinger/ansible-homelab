@@ -1,6 +1,7 @@
 ---
 - hosts: ubuntu
   gather_facts: no
+  connection: local
 
   pre_tasks:
     - name: ping node1
