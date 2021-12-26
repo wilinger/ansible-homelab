@@ -1,0 +1,41 @@
+---
+- hosts: ubuntu
+  become: yes
+
+  vars_files: 
+   - vars/config.yml
+
+  #vars:
+  #  vault: "{{ lookup('community.hashi_vault.hashi_vault', 'secret=kv-v2/data/secret/ansible auth_method=approle') }}"
+
+  roles:
+    - role: oefenweb.postfix
+      vars:
+        postfix_aliases:
+          - user: node_server
+            alias: "{{ vault.secret_alias }}"
+        postfix_relayhost: "{{ vault.secret_postfix_relayhost }}"
+        postfix_relaytls: true
+        postfix_smtp_tls_cafile: /etc/ssl/certs/ca-certificates.crt
+        postfix_sasl_user: "{{ vault.secret_postfix_sasl_user }}"
+        postfix_sasl_password: "{{ vault.secret_postfix_sasl_password }}"
+
+    - role: jnv.unattended-upgrades
+      unattended_origins_patterns:
+      - 'origin=Ubuntu,archive=${distro_codename}-security'
+      - 'o=Ubuntu,a=${distro_codename}-updates'
+      unattended_update_days: '{"Fri"}'
+      unattended_mail: "{{ vault.secret_unattended_mail }}"
+      unattended_mail_only_on_error: true
+      unattended_automatic_reboot: true
+      unattended_automatic_reboot_time: '04:00'
+
+    - role: andrewrothstein.docker_engine
+
+    - role: nfs-common
+
+  tasks:
+    - include_tasks: tasks/add_docker_group.yml
+      vars:
+        docker_user: "{{ vault.secret_user }}"
+   
