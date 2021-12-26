@@ -23,6 +23,8 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v2
+      env:
+        VAULT_PASS: ${{ SECRETS.VAULT_PASS }}
               
     - name: Setup Ansible
       uses: saubermacherag/ansible-playbook-docker-action@v1.4
