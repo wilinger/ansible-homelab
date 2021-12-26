@@ -27,12 +27,12 @@ jobs:
     - name: Play Ansible Playbook
       uses: arillso/action.playbook@master
       with:
-        playbook: k8s.yml
+        playbook: raspberrypi.yml
         inventory: inventory/hosts.yml
         galaxy_file: requirements.yml
         vault_password: ${{secrets.VAULT_PASSWORD}}
         private_key: ${{secrets.SSH_PRIVATE_KEY}}
-        verbose: 1
+        verbose: 0
       env:
         ANSIBLE_HOST_KEY_CHECKING: 'false'
         ANSIBLE_DEPRECATION_WARNINGS: 'false'
