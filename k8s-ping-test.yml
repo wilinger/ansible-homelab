@@ -1,12 +1,6 @@
 ---
 - hosts: ubuntu
-  become: yes
-
-  vars_files: 
-   - vars/config.yml
-
-  #vars:
-  #  vault: "{{ lookup('community.hashi_vault.hashi_vault', 'secret=kv-v2/data/secret/ansible auth_method=approle') }}"
+  gather_facts: false
 
   tasks:
     - name: ping node1
