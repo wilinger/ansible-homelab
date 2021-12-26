@@ -20,6 +20,10 @@
       shell: nc node1.zencluster.org -zv 22
       ignore_errors: true
 
-    - name: failure check vault
+    - name: failure connection check vault
       shell: nc vault.zencluster.org -zv 2222
+      ignore_errors: true
+
+    - name: failure resolving host check
+      shell: nc unknown.zencluster.org -zv 22
       ignore_errors: true
