@@ -23,13 +23,7 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v2
-    
-    # - name: Run script file
-    #   run: |
-    #      chmod +x ./entrypoint.sh
-    #      ./entrypoint.sh
-    #   shell: bash
-
+      
     - name: Play Ansible Playbook
       uses: arillso/action.playbook@master
       with:
@@ -38,7 +32,8 @@ jobs:
         galaxy_file: requirements.yml
         vault_password: ${{secrets.VAULT_PASSWORD}}
         private_key: ${{secrets.SSH_PRIVATE_KEY}}
+        verbose: 4
       env:
-        ANSIBLE_HOST_KEY_CHECKING: 'false'
+        # ANSIBLE_HOST_KEY_CHECKING: 'false'
         ANSIBLE_DEPRECATION_WARNINGS: 'false'
         
