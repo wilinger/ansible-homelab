@@ -24,7 +24,7 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
       env:
-        VAULT_PASS: ${{ SECRETS.VAULT_PASS }}
+        ANSIBLE_VAULT_PASSWORD_FILE: ~/.key.txt
               
     - name: Setup Ansible
       uses: saubermacherag/ansible-playbook-docker-action@v1.4
