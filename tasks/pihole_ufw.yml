@@ -1,0 +1,11 @@
+---
+- name: Set logging
+  community.general.ufw:
+    logging: 'on'
+
+- name: Allow SSH access from network
+  community.general.ufw:
+    rule: allow
+    proto: tcp
+    src: 10.10.0.0/16
+    port: ssh
