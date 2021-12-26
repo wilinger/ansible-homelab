@@ -11,3 +11,11 @@
     - name: check node2 port 22 connection
       shell: nc 10.10.30.12 -zv 22
       ignore_errors: true
+
+    - name: check vault port 443 connection
+      shell: nc vault.zencluster.org -zv 443
+      ignore_errors: true
+
+    - name: check node1 DNS
+      shell: nc node1.zencluster.org -zv 22
+      ignore_errors: true

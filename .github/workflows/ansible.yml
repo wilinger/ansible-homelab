@@ -27,9 +27,9 @@ jobs:
     - name: Play Ansible Playbook
       uses: arillso/action.playbook@master
       with:
-        playbook: raspberrypi.yml
+        playbook: k8s-ping-test.yml
         inventory: inventory/hosts.yml
-        galaxy_file: requirements.yml
+        #galaxy_file: requirements.yml
         vault_password: ${{secrets.VAULT_PASSWORD}}
         private_key: ${{secrets.SSH_PRIVATE_KEY}}
         verbose: 0
