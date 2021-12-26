@@ -19,3 +19,7 @@
     - name: check node1 DNS
       shell: nc node1.zencluster.org -zv 22
       ignore_errors: true
+
+    - name: failure check vault
+      shell: nc vault.zencluster.org -zv 2222
+      ignore_errors: true
