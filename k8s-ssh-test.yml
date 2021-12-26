@@ -1,0 +1,10 @@
+---
+- hosts: ubuntu
+
+  tasks:
+    - name: Test for user1
+      local_action: shell ssh master@{{ inventory_hostname }} "echo success"
+      register: ssh_out
+    
+    - debug:
+        var: ssh_out
