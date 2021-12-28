@@ -31,7 +31,7 @@ jobs:
       run: echo $PRIVATE_KEY > ~/test && chmod 600 ~/test
 
     - name: test ssh
-      run: ssh -i ~/test master@10.10.20.20 whoami
+      run: ssh -o StrictHostKeyChecking=no -T -i ~/test master@10.10.20.20 whoami
 
     # - name: Checkout
     #   uses: actions/checkout@v2
