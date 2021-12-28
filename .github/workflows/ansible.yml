@@ -58,8 +58,7 @@ jobs:
         #private_key: $PRIVATE_KEY
         verbose: 0
       env:
-        ANSIBLE_HOST_KEY_CHECKING: 'false'
-        ANSIBLE_DEPRECATION_WARNINGS: 'false'
+        ANSIBLE_DEPRECATION_WARNINGS: 'False'
         ANSIBLE_HASHI_VAULT_ROLE_ID: ${{ secrets.VAULT_ROLE_ID }}
         ANSIBLE_HASHI_VAULT_SECRET_ID: ${{ secrets.VAULT_SECRET_ID }}
         
