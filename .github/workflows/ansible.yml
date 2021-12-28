@@ -28,10 +28,13 @@ jobs:
             kv-v2/data/secret/ansible secret_private_key | PRIVATE_KEY ;
 
     - name: echo test1
-      run: mkdir ~/.ssh && echo $SKEY > ~/.ssh/test1 && chmod 600 ~/.ssh/test1 && ls -l ~
+      run: mkdir ~/.ssh && echo $SKEY > ~/.ssh/test1 && chmod 600 ~/.ssh/test1
       env:
         SKEY: ${{ secrets.SSH_PRIVATE_KEY }}
 
+    - name: ls
+      run: ls -lFa ~
+      
     - name: ssh test1
       run: ssh -o StrictHostKeyChecking=no -T -i ~/.ssh/test1 master@10.10.20.20 whoami
 
