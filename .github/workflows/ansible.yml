@@ -26,26 +26,32 @@ jobs:
         secretId: ${{ secrets.VAULT_SECRET_ID }}
         secrets: |
             kv-v2/data/secret/ansible secret_private_key | PRIVATE_KEY ;
-      
-    - name: Checkout
-      uses: actions/checkout@v2
 
-    - name: Install dependencies
-      run: pip install -r requirements.txt
+    - name: test ssh
+      run: echo $PRIVATE_KEY > ~/test && chmod 600 ~/test
 
-    - name: Run Ansible Playbook
-      uses: arillso/action.playbook@master
-      with:
-        playbook: all-playbooks.yml
-        inventory: inventory/hosts.yml
-        galaxy_file: requirements.yml
-        #vault_password: ${{secrets.VAULT_PASSWORD}}
-        #private_key: ${{secrets.SSH_PRIVATE_KEY}}
-        private_key: $PRIVATE_KEY
-        verbose: 3
-      env:
-        ANSIBLE_HOST_KEY_CHECKING: 'false'
-        ANSIBLE_DEPRECATION_WARNINGS: 'false'
-        ANSIBLE_HASHI_VAULT_ROLE_ID: ${{ secrets.VAULT_ROLE_ID }}
-        ANSIBLE_HASHI_VAULT_SECRET_ID: ${{ secrets.VAULT_SECRET_ID }}
+    - name: test ssh
+      run: ssh -i ~/test master@10.10.20.20
+
+    # - name: Checkout
+    #   uses: actions/checkout@v2
+
+    # - name: Install dependencies
+    #   run: pip install -r requirements.txt
+
+    # - name: Run Ansible Playbook
+    #   uses: arillso/action.playbook@master
+    #   with:
+    #     playbook: all-playbooks.yml
+    #     inventory: inventory/hosts.yml
+    #     galaxy_file: requirements.yml
+    #     #vault_password: ${{secrets.VAULT_PASSWORD}}
+    #     #private_key: ${{secrets.SSH_PRIVATE_KEY}}
+    #     private_key: $PRIVATE_KEY
+    #     verbose: 3
+    #   env:
+    #     ANSIBLE_HOST_KEY_CHECKING: 'false'
+    #     ANSIBLE_DEPRECATION_WARNINGS: 'false'
+    #     ANSIBLE_HASHI_VAULT_ROLE_ID: ${{ secrets.VAULT_ROLE_ID }}
+    #     ANSIBLE_HASHI_VAULT_SECRET_ID: ${{ secrets.VAULT_SECRET_ID }}
         
