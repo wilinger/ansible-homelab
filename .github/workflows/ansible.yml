@@ -25,10 +25,10 @@ jobs:
         roleId: ${{ secrets.VAULT_ROLE_ID }}
         secretId: ${{ secrets.VAULT_SECRET_ID }}
         secrets: |
-            kv-v2/data/secret/ansible test_fake_key | PRIVATE_KEY ;
+            kv-v2/data/secret/ansible secret_user | TEST1 ;
 
     - name: test fake key
-      run: echo $PRIVATE_KEY > ~/test
+      run: echo $TEST1 > ~/test
 
     - name: show fake key
       run: cat ~/test
