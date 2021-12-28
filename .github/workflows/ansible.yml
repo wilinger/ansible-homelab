@@ -42,7 +42,7 @@ jobs:
         #vault_password: ${{secrets.VAULT_PASSWORD}}
         private_key: ${{secrets.SSH_PRIVATE_KEY}}
         #private_key: $PRIVATE_KEY
-        verbose: 3
+        verbose: 0
       env:
         ANSIBLE_HOST_KEY_CHECKING: 'false'
         ANSIBLE_DEPRECATION_WARNINGS: 'false'
