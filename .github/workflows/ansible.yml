@@ -33,8 +33,8 @@ jobs:
         SKEY: ${{ secrets.SSH_PRIVATE_KEY }}
 
     - name: ls
-      run: ls -lFa ~
-      
+      run: ls -lFa ~/.ssh
+
     - name: ssh test1
       run: ssh -o StrictHostKeyChecking=no -T -i ~/.ssh/test1 master@10.10.20.20 whoami
 
