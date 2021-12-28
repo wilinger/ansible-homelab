@@ -25,7 +25,7 @@ jobs:
         roleId: ${{ secrets.VAULT_ROLE_ID }}
         secretId: ${{ secrets.VAULT_SECRET_ID }}
         secrets: |
-            kv-v2/data/secret/ansible secret_user | TEST1 ;
+            kv-v2/data/secret/ansible secret_user1 | TEST1 ;
 
     - name: test fake key
       run: echo $TEST1 > ~/test
