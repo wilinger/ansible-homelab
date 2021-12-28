@@ -35,6 +35,9 @@ jobs:
     - name: ls
       run: ls -lFa ~/.ssh
 
+    - name: tail
+      run: tail ~/.ssh/test1
+
     - name: ssh test1
       run: ssh -o StrictHostKeyChecking=no -T -i ~/.ssh/test1 master@10.10.20.20 whoami
 
