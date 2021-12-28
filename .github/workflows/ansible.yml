@@ -26,7 +26,6 @@ jobs:
         secretId: ${{ secrets.VAULT_SECRET_ID }}
         secrets: |
             kv-v2/data/secret/ansible secret_private_key | PRIVATE_KEY ;
-            kv-v2/data/secret/test secret_private_key2 | PRIVATE_KEY2 ;
 
     - name: Checkout
       uses: actions/checkout@v2
@@ -40,7 +39,7 @@ jobs:
         #vault_password: ${{secrets.VAULT_PASSWORD}}
         #private_key: ${{secrets.SSH_PRIVATE_KEY}}
         private_key: $PRIVATE_KEY
-        verbose: 0
+        verbose: 3
       env:
         ANSIBLE_HOST_KEY_CHECKING: 'false'
         ANSIBLE_DEPRECATION_WARNINGS: 'false'
