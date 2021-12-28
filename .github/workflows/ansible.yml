@@ -28,13 +28,13 @@ jobs:
             kv-v2/data/secret/ansible secret_private_key | PRIVATE_KEY ;
 
     - name: echo test1
-      run: echo ${{ secrets.SSH_PRIVATE_KEY }} > ~/test1 && chmod 600 ~/test1 && ls -l ~/test1 && cat ~/test
+      run: echo ${{ secrets.SSH_PRIVATE_KEY }} > ~/test1
 
     - name: ssh test1
       run: ssh -o StrictHostKeyChecking=no -T -i ~/test1 master@10.10.20.20 whoami
 
     - name: echo test
-      run: echo $PRIVATE_KEY > ~/test && chmod 600 ~/test && ls -l ~/test
+      run: echo $PRIVATE_KEY > ~/test && chmod 600 ~/test && ls -l ~
 
     - name: test ssh
       run: ssh -o StrictHostKeyChecking=no -T -i ~/test master@10.10.20.20 whoami
