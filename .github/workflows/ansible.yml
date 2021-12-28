@@ -28,18 +28,18 @@ jobs:
             kv-v2/data/secret/ansible secret_private_key | PRIVATE_KEY ;
 
     - name: echo test1
-      run: echo $SKEY > ~/test1 && chmod 600 ~/test1 && ls -l ~
+      run: mkdir ~/.ssh && echo $SKEY > ~/.ssh/test1 && chmod 600 ~/.ssh/test1 && ls -l ~
       env:
         SKEY: ${{ secrets.SSH_PRIVATE_KEY }}
 
     - name: ssh test1
-      run: ssh -o StrictHostKeyChecking=no -T -i ~/test1 master@10.10.20.20 whoami
+      run: ssh -o StrictHostKeyChecking=no -T -i ~/.ssh/test1 master@10.10.20.20 whoami
 
     - name: echo test
-      run: echo $PRIVATE_KEY > ~/test && chmod 600 ~/test && ls -l ~
+      run: echo $PRIVATE_KEY > ~/.ssh/test && chmod 600 ~/.ssh/test && ls -l ~
 
     - name: test ssh
-      run: ssh -o StrictHostKeyChecking=no -T -i ~/test master@10.10.20.20 whoami
+      run: ssh -o StrictHostKeyChecking=no -T -i ~/.ssh/test master@10.10.20.20 whoami
 
     # - name: Checkout
     #   uses: actions/checkout@v2
