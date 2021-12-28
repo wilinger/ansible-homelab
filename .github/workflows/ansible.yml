@@ -1,10 +1,6 @@
-# This is a basic workflow to help you get started with Actions
-
 name: Run Ansible Playbook
 
-# Controls when the workflow will run
 on:
-  # Triggers the workflow on push or pull request events but only for the main branch
   push:
     branches: [ main ]
   pull_request:
@@ -21,19 +17,32 @@ jobs:
         shell: bash
 
     steps:
+    - name: Import Secrets
+      uses: hashicorp/vault-action@v2.3.1
+      with:
+        url: ${{ secrets.VAULT_ADDR }}
+        method: approle
+        roleId: ${{ secrets.VAULT_ROLE_ID }}
+        secretId: ${{ secrets.VAULT_SECRET_ID }}
+        secrets: |
+            kv-v2/data/secret/ansible secret_private_key | PRIVATE_KEY ;
+
     - name: Checkout
       uses: actions/checkout@v2
 
-    - name: Play Ansible Playbook
+    - name: Run Ansible Playbook
       uses: arillso/action.playbook@master
       with:
-        playbook: raspberrypi.yml
+        playbook: all-playbooks.yml
         inventory: inventory/hosts.yml
         galaxy_file: requirements.yml
-        vault_password: ${{secrets.VAULT_PASSWORD}}
-        private_key: ${{secrets.SSH_PRIVATE_KEY}}
+        #vault_password: ${{secrets.VAULT_PASSWORD}}
+        #private_key: ${{secrets.SSH_PRIVATE_KEY}}
+        private_key: $PRIVATE_KEY
         verbose: 0
       env:
         ANSIBLE_HOST_KEY_CHECKING: 'false'
         ANSIBLE_DEPRECATION_WARNINGS: 'false'
+        ANSIBLE_HASHI_VAULT_ROLE_ID: ${{ secrets.VAULT_ROLE_ID }}
+        ANSIBLE_HASHI_VAULT_SECRET_ID: ${{ secrets.VAULT_SECRET_ID }}
         
