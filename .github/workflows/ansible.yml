@@ -36,7 +36,7 @@ jobs:
         SSH_PRIVATE_KEY: ${{secrets.SSH_PRIVATE_KEY}}
       run: |
         ssh-agent -a $SSH_AUTH_SOCK > /dev/null
-        echo "$SSH_PRIVATE_KEY" | tr -d '\r' | DISPLAY=None ssh-add - >/dev/null
+        echo "$PRIVATE_KEY" | tr -d '\r' | DISPLAY=None ssh-add - >/dev/null
 
     - name: Print ssh-add identities
       run: ssh-add -l
