@@ -42,7 +42,7 @@ jobs:
       run: ssh-add -l
 
     - name: test ssh
-      run: ssh -T master@10.10.50.50 whoami
+      run: ssh -T -o StrictHostKeyChecking=no master@10.10.50.50 whoami
         
 
     # - name: Install dependencies
