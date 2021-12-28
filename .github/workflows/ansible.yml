@@ -11,7 +11,8 @@ jobs:
   ansible:
     name: 'Ansible'
     runs-on: self-hosted
-
+    env:
+      SSH_AUTH_SOCK: /tmp/ssh_agent.sock
     defaults:
       run:
         shell: bash
