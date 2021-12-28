@@ -30,22 +30,36 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
 
-    - name: Install dependencies
-      run: pip install -r requirements.txt
-
-    - name: Run Ansible Playbook
-      uses: arillso/action.playbook@master
-      with:
-        playbook: all-playbooks.yml
-        inventory: inventory/hosts.yml
-        galaxy_file: requirements.yml
-        #vault_password: ${{secrets.VAULT_PASSWORD}}
-        private_key: ${{secrets.SSH_PRIVATE_KEY}}
-        #private_key: $PRIVATE_KEY
-        verbose: 0
+    - name: Setup SSH passphrase
       env:
-        ANSIBLE_HOST_KEY_CHECKING: 'false'
-        ANSIBLE_DEPRECATION_WARNINGS: 'false'
-        ANSIBLE_HASHI_VAULT_ROLE_ID: ${{ secrets.VAULT_ROLE_ID }}
-        ANSIBLE_HASHI_VAULT_SECRET_ID: ${{ secrets.VAULT_SECRET_ID }}
+        SSH_PRIVATE_KEY: ${{secrets.SSH_PRIVATE_KEY}}
+      run: |
+        ssh-agent -a $SSH_AUTH_SOCK > /dev/null
+        echo "$SSH_PRIVATE_KEY" | tr -d '\r' | DISPLAY=None ssh-add - >/dev/null
+
+    - name: Print ssh-add identities
+      run: ssh-add -l
+
+    - name: test ssh
+      run: ssh -T master@10.10.50.50 whoami
+        
+
+    # - name: Install dependencies
+    #   run: pip install -r requirements.txt
+
+    # - name: Run Ansible Playbook
+    #   uses: arillso/action.playbook@master
+    #   with:
+    #     playbook: all-playbooks.yml
+    #     inventory: inventory/hosts.yml
+    #     galaxy_file: requirements.yml
+    #     #vault_password: ${{secrets.VAULT_PASSWORD}}
+    #     private_key: ${{secrets.SSH_PRIVATE_KEY}}
+    #     #private_key: $PRIVATE_KEY
+    #     verbose: 0
+    #   env:
+    #     ANSIBLE_HOST_KEY_CHECKING: 'false'
+    #     ANSIBLE_DEPRECATION_WARNINGS: 'false'
+    #     ANSIBLE_HASHI_VAULT_ROLE_ID: ${{ secrets.VAULT_ROLE_ID }}
+    #     ANSIBLE_HASHI_VAULT_SECRET_ID: ${{ secrets.VAULT_SECRET_ID }}
         
