@@ -44,8 +44,8 @@ jobs:
     - name: test ssh
       run: ssh -T -o StrictHostKeyChecking=no master@10.10.50.50 whoami
         
-    - name: Install pip dependencies
-      run: pip install -r requirements.txt
+    # - name: Install pip dependencies
+    #   run: pip install -r requirements.txt
 
     - name: Install Ansible collections and roles
       run: ansible-galaxy install -r requirements.yml
