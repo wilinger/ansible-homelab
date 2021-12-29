@@ -53,6 +53,7 @@ jobs:
     - name: Run Ansible Playbook
       run: ansible-playbook -i inventory/hosts.yml all-playbooks.yml
       env:
+        VAULT_ADDR: ${{ secrets.VAULT_ADDR }}
         ANSIBLE_HASHI_VAULT_ROLE_ID: ${{ secrets.VAULT_ROLE_ID }}
         ANSIBLE_HASHI_VAULT_SECRET_ID: ${{ secrets.VAULT_SECRET_ID }}
     
