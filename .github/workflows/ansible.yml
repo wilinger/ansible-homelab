@@ -31,8 +31,6 @@ jobs:
       uses: actions/checkout@v2
 
     - name: Add SSH key to ssh-agent
-      env:
-        SSH_PRIVATE_KEY: ${{secrets.SSH_PRIVATE_KEY}}
       run: |
         ssh-agent -a $SSH_AUTH_SOCK > /dev/null
         echo "$SSH_PRIVATE_KEY" | tr -d '\r' | DISPLAY=None ssh-add - >/dev/null
