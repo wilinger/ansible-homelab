@@ -12,7 +12,6 @@ jobs:
     runs-on: self-hosted
     env:
       SSH_AUTH_SOCK: /tmp/ssh_agent.sock
-      TERM: xterm-color
     defaults:
       run:
         shell: bash
@@ -52,4 +51,5 @@ jobs:
         ANSIBLE_HASHI_VAULT_ROLE_ID: ${{ secrets.VAULT_ROLE_ID }}
         ANSIBLE_HASHI_VAULT_SECRET_ID: ${{ secrets.VAULT_SECRET_ID }}
         ANSIBLE_DEPRECATION_WARNINGS: "False"
-
+        PY_COLORS: "1"
+        ANSIBLE_FORCE_COLOR: "1"
