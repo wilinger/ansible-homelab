@@ -51,7 +51,7 @@ jobs:
       run: ansible-galaxy install -r requirements.yml
     
     - name: Run Ansible Playbook
-      run: ansible-playbook all-playbooks.yml
+      run: ansible-playbook -i inventory/hosts.yml all-playbooks.yml
       env:
         ANSIBLE_HASHI_VAULT_ROLE_ID: ${{ secrets.VAULT_ROLE_ID }}
         ANSIBLE_HASHI_VAULT_SECRET_ID: ${{ secrets.VAULT_SECRET_ID }}
