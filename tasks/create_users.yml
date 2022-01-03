@@ -1,0 +1,35 @@
+---
+- name: Create group
+  ansible.builtin.group:
+    name: ssh
+    state: present
+
+- name: Create users
+  ansible.builtin.user:
+    name: '{{ item }}'
+    state: present
+    shell: /bin/bash
+    groups: sudo,ssh
+  with_items:
+    - '{{ deploy_user }}'
+
+- name: Add authorized key
+  ansible.posix.authorized_key: 
+    user: '{{ item }}'
+    state: present
+    key: "{{ lookup('file', '~/.ssh/' ~ item ~ '.pub') }}"
+  with_items:
+    - '{{ deploy_user }}'
+  
+- name: Allow passwordless for user
+  copy:
+    dest: '/etc/sudoers.d/{{ item }}'
+    owner: root
+    group: root
+    mode: 0440
+    content: |
+      {{ item }} ALL=(ALL) NOPASSWD:ALL
+    validate: visudo -cf %s
+  with_items:
+    - '{{ deploy_user }}'
+

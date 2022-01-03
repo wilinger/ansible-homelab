@@ -2,17 +2,19 @@
 - hosts: rpi
   become: yes
 
+  # ansible-vault
   # vars_files:
-  #   - vars/config.yml
+  #  - vars/config.yml
 
+  # hashi-vault
   vars:
-   vault: "{{ lookup('community.hashi_vault.hashi_vault', 'secret=kv-v2/data/secret/ansible auth_method=approle') }}"
+    vault: "{{ lookup('community.hashi_vault.hashi_vault', 'secret=kv-v2/data/secret/ansible auth_method=approle') }}"
 
   roles:
     - role: jnv.unattended-upgrades
       unattended_origins_patterns:
       - 'origin=Raspbian,codename=${distro_codename},label=Raspbian'
-      unattended_mail: "{{ vault.secret_unattended_mail }}" 
+      unattended_mail: "{{ vault._unattended_mail }}" 
       unattended_mail_only_on_error: true
       unattended_automatic_reboot: true
       unattended_automatic_reboot_time: '03:00'
@@ -21,14 +23,20 @@
       vars:
         postfix_aliases:
           - user: rpi
-            alias: "{{ vault.secret_alias }}"
-        postfix_relayhost: "{{ vault.secret_postfix_relayhost }}"
+            alias: "{{ vault._alias }}"
+        postfix_relayhost: "{{ vault._postfix_relayhost }}"
         postfix_relaytls: true
         postfix_smtp_tls_cafile: /etc/ssl/certs/ca-certificates.crt
-        postfix_sasl_user: "{{ vault.secret_postfix_sasl_user }}"
-        postfix_sasl_password: "{{ vault.secret_postfix_sasl_password }}"
+        postfix_sasl_user: "{{ vault._postfix_sasl_user }}"
+        postfix_sasl_password: "{{ vault._postfix_sasl_password }}"
 
   tasks:
     - name: Apply UFW rules to pihole
       include_tasks: tasks/pihole_ufw.yml
       when: inventory_hostname == 'pihole'
+
+    - name: Create users
+      include_tasks: tasks/create_users.yml
+      vars:
+        deploy_user: "{{ vault._ansible_user }}"
+

@@ -25,7 +25,7 @@ jobs:
         roleId: ${{ secrets.VAULT_ROLE_ID }}
         secretId: ${{ secrets.VAULT_SECRET_ID }}
         secrets: |
-            kv-v2/data/secret/ansible secret_private_key | SSH_PRIVATE_KEY ;
+            kv-v2/data/secret/ansible _private_key | SSH_PRIVATE_KEY ;
 
     - name: Checkout
       uses: actions/checkout@v2
