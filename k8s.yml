@@ -35,14 +35,14 @@
    # - role: andrewrothstein.docker_engine
     - role: nfs-common
 
-  tasks:
-#    - name: Add user to docker group
-#      include_tasks: tasks/add_docker_group.yml
-#      vars:
-#        docker_user: "{{ vault._docker_user }}"
+  # tasks:
+  #   - name: Add user to docker group
+  #     include_tasks: tasks/add_docker_group.yml
+  #     vars:
+  #       docker_user: "{{ vault._docker_user }}"
     
-    - name: Create users
-      include_tasks: tasks/create_users.yml
-      vars:
-        deploy_user: "{{ vault._ansible_user }}"
+  #   - name: Create users
+  #     include_tasks: tasks/create_users.yml
+  #     vars:
+  #       deploy_user: "{{ vault._ansible_user }}"
 

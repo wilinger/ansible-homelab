@@ -35,8 +35,8 @@
       include_tasks: tasks/pihole_ufw.yml
       when: inventory_hostname == 'pihole'
 
-    - name: Create users
-      include_tasks: tasks/create_users.yml
-      vars:
-        deploy_user: "{{ vault._ansible_user }}"
+    # - name: Create users
+    #   include_tasks: tasks/create_users.yml
+    #   vars:
+    #     deploy_user: "{{ vault._ansible_user }}"
 
