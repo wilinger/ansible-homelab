@@ -3,12 +3,12 @@
   become: yes
 
   # ansible-vault
-  # vars_files: 
-  #  - vars/config.yml
+  vars_files: 
+   - vars/config.yml
 
   # hashi-vault
-  vars:
-    vault: "{{ lookup('community.hashi_vault.hashi_vault', 'secret=kv-v2/data/secret/ansible auth_method=approle') }}"
+  # vars:
+  #   vault: "{{ lookup('community.hashi_vault.hashi_vault', 'secret=kv-v2/data/secret/ansible auth_method=approle') }}"
 
   roles:
     - role: oefenweb.postfix

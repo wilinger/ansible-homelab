@@ -1,0 +1,15 @@
+---
+- name: Configure sshd for ssh ca
+  lineinfile:
+    path: "/etc/ssh/sshd_config"
+    regex: "^(#)?{{item.key}}"
+    line: "{{item.key}} {{item.value}}"
+    state: present
+  loop:
+    - { key: "AuthorizedPrincipalsFile", value: "/etc/ssh/auth_principals/%u" }
+    - { key: "ChallengeResponseAuthentication", value: "no" }
+    - { key: "TrustedUserCAKeys", value: "/etc/ssh/trusted-CA.pem" }
+    - { key: "PermitRootLogin", value: "no" }
+    - { key: "PasswordAuthentication", value: "no" } 
+  notify:
+    - restart sshd
