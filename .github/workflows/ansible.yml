@@ -10,44 +10,61 @@ jobs:
   ansible:
     name: 'Ansible'
     runs-on: self-hosted
-    env:
-      SSH_AUTH_SOCK: /tmp/ssh_agent.sock
+    # env:
+    #   SSH_AUTH_SOCK: /tmp/ssh_agent.sock
     defaults:
       run:
         shell: bash
 
     steps:
-    - name: Import Secrets
-      uses: hashicorp/vault-action@v2.3.1
-      with:
-        url: ${{ secrets.VAULT_ADDR }}
-        method: approle
-        roleId: ${{ secrets.VAULT_ROLE_ID }}
-        secretId: ${{ secrets.VAULT_SECRET_ID }}
-        secrets: |
-            kv-v2/data/secret/ansible _private_key | SSH_PRIVATE_KEY ;
-
-    - name: Checkout
-      uses: actions/checkout@v2
-
-    - name: Add SSH key to ssh-agent
+    - name: Request sign key
       run: |
-        ssh-agent -a $SSH_AUTH_SOCK > /dev/null
-        echo "$SSH_PRIVATE_KEY" | tr -d '\r' | DISPLAY=None ssh-add - >/dev/null
+        ssh-keygen -t rsa-sha2-256 -q -N "" -f ${HOME}/.ssh/id_rsa-sha2-256
+        export PUBLIC_KEY=$(cat ${HOME}/.ssh/id_rsa-sha2-256.pub)
+        APPROLE_TOKEN=$(curl -s --request POST \
+          --data '{"role_id":"${{ secrets.VAULT_ROLE_ID }}","secret_id":"${{ secrets.VAULT_SECRET_ID }}"}' \
+          ${{ secrets.VAULT_ADDR }}/v1/auth/approle/login | jq -r .auth.client_token)
+        curl -s \
+          --header "X-Vault-Token: ${APPROLE_TOKEN}" \
+          --request POST \
+          --data "{\"public_key\":\"${PUBLIC_KEY}\",\"valid_principals\":\"${{ secrets.ANSIBLE_USER }}\"}" \
+          ${{ secrets.VAULT_ADDR }}/v1/ssh-client-signer/sign/clientrole | jq -r .data.signed_key > ${HOME}/.ssh/id_rsa-sha2-256.signed.pub
+        chmod 400 ${HOME}/.ssh/id_rsa-sha2-256*
+    - name: Test ssh
+      run: |
+        ssh -i ${HOME}/.ssh/id_rsa-sha2-256 -i ${HOME}/.ssh/id_rsa-sha2-256.signed.pub ${{ secrets.ANSIBLE_USER }}@${{ secrets.HOST_ADDR }} "ls /tmp"
+
+    # - name: Import Secrets
+    #   uses: hashicorp/vault-action@v2.3.1
+    #   with:
+    #     url: ${{ secrets.VAULT_ADDR }}
+    #     method: approle
+    #     roleId: ${{ secrets.VAULT_ROLE_ID }}
+    #     secretId: ${{ secrets.VAULT_SECRET_ID }}
+    #     secrets: |
+    #         kv-v2/data/secret/ansible _private_key | SSH_PRIVATE_KEY ;
+
+    # - name: Checkout
+    #   uses: actions/checkout@v2
+
+    # - name: Add SSH key to ssh-agent
+    #   run: |
+    #     ssh-agent -a $SSH_AUTH_SOCK > /dev/null
+    #     echo "$SSH_PRIVATE_KEY" | tr -d '\r' | DISPLAY=None ssh-add - >/dev/null
 
     # Already installed in custom container    
     # - name: Install pip dependencies
     #   run: pip install -r requirements.txt
 
-    - name: Install Ansible collections and roles
-      run: ansible-galaxy install -r requirements.yml
+    # - name: Install Ansible collections and roles
+    #   run: ansible-galaxy install -r requirements.yml
     
-    - name: Run Ansible Playbook
-      run: ansible-playbook -i inventory/hosts.yml all-playbooks.yml
-      env:
-        VAULT_ADDR: ${{ secrets.VAULT_ADDR }}
-        ANSIBLE_HASHI_VAULT_ROLE_ID: ${{ secrets.VAULT_ROLE_ID }}
-        ANSIBLE_HASHI_VAULT_SECRET_ID: ${{ secrets.VAULT_SECRET_ID }}
-        ANSIBLE_DEPRECATION_WARNINGS: "False"
-        PY_COLORS: "1"
-        ANSIBLE_FORCE_COLOR: "1"
+    # - name: Run Ansible Playbook
+    #   run: ansible-playbook -i inventory/hosts.yml all-playbooks.yml
+    #   env:
+    #     VAULT_ADDR: ${{ secrets.VAULT_ADDR }}
+    #     ANSIBLE_HASHI_VAULT_ROLE_ID: ${{ secrets.VAULT_ROLE_ID }}
+    #     ANSIBLE_HASHI_VAULT_SECRET_ID: ${{ secrets.VAULT_SECRET_ID }}
+    #     ANSIBLE_DEPRECATION_WARNINGS: "False"
+    #     PY_COLORS: "1"
+    #     ANSIBLE_FORCE_COLOR: "1"

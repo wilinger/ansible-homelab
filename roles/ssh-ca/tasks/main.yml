@@ -6,10 +6,18 @@
     line: "{{item.key}} {{item.value}}"
     state: present
   loop:
-    - { key: "AuthorizedPrincipalsFile", value: "/etc/ssh/auth_principals/%u" }
     - { key: "ChallengeResponseAuthentication", value: "no" }
     - { key: "TrustedUserCAKeys", value: "/etc/ssh/trusted-CA.pem" }
     - { key: "PermitRootLogin", value: "no" }
-    - { key: "PasswordAuthentication", value: "no" } 
+    - { key: "PasswordAuthentication", value: "no" }
+    # - { key: "AuthorizedPrincipalsFile", value: "/etc/ssh/auth_principals/%u" }
   notify:
     - restart sshd
+
+- name: Download trusted-CA.pem
+  get_url:
+    url: "{{ vault_addr }}/v1/ssh-client-signer/public_key"
+    dest: /etc/ssh/trusted-CA.pem
+    mode: 0640
+    checksum: md5:88d7d0cc4bc2011f28bc3d641114cdc7
+ 
