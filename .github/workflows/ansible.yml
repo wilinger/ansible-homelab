@@ -30,6 +30,7 @@ jobs:
           --data "{\"public_key\":\"${PUBLIC_KEY}\",\"valid_principals\":\"${{ secrets.ANSIBLE_USER }}\"}" \
           ${{ secrets.VAULT_ADDR }}/v1/ssh-client-signer/sign/clientrole | jq -r .data.signed_key > ${HOME}/.ssh/id_rsa-sha2-256.signed.pub
         chmod 400 ${HOME}/.ssh/id_rsa-sha2-256*
+        ls -l ${HOME}/.ssh
     - name: Test ssh
       run: |
         ssh -i ${HOME}/.ssh/id_rsa-sha2-256 -i ${HOME}/.ssh/id_rsa-sha2-256.signed.pub ${{ secrets.ANSIBLE_USER }}@${{ secrets.HOST_ADDR }} "ls /tmp"
