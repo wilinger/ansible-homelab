@@ -33,7 +33,7 @@ jobs:
         ls -l ${HOME}/.ssh
     - name: Test ssh
       run: |
-        ssh -i ${HOME}/.ssh/id_rsa-sha2-256 -i ${HOME}/.ssh/id_rsa-sha2-256.signed.pub ${{ secrets.ANSIBLE_USER }}@${{ secrets.HOST_ADDR }} "ls /tmp"
+        ssh -o StrictHostKeyChecking=no -i ${HOME}/.ssh/id_rsa-sha2-256 -i ${HOME}/.ssh/id_rsa-sha2-256.signed.pub ${{ secrets.ANSIBLE_USER }}@${{ secrets.HOST_ADDR }} "ls /tmp"
 
     # - name: Import Secrets
     #   uses: hashicorp/vault-action@v2.3.1
