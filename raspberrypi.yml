@@ -10,31 +10,44 @@
   vars:
     vault: "{{ lookup('community.hashi_vault.hashi_vault', 'secret=kv-v2/data/secret/ansible auth_method=approle') }}"
 
-  roles:
-    - role: jnv.unattended-upgrades
-      unattended_origins_patterns:
-      - 'origin=Raspbian,codename=${distro_codename},label=Raspbian'
-      unattended_mail: "{{ vault._unattended_mail }}" 
-      unattended_mail_only_on_error: true
-      unattended_automatic_reboot: true
-      unattended_automatic_reboot_time: '03:00'
-      unattended_update_days: {"Fri"}
+  tasks:
+    - block:
+        - import_role:
+            name: ssh-ca-client
+          vars:
+            VAULT_ADDR: "{{ vault._vault_addr }}"
+            VAULT_ROLE_ID: "{{ lookup('env','ANSIBLE_HASHI_VAULT_ROLE_ID') }}"
+            VAULT_SECRET_ID: "{{ lookup('env','ANSIBLE_HASHI_VAULT_SECRET_ID') }}"
 
-    - role: oefenweb.postfix
-      vars:
-        postfix_aliases:
-          - user: rpi
-            alias: "{{ vault._alias }}"
-        postfix_relayhost: "{{ vault._postfix_relayhost }}"
-        postfix_relaytls: true
-        postfix_smtp_tls_cafile: /etc/ssl/certs/ca-certificates.crt
-        postfix_sasl_user: "{{ vault._postfix_sasl_user }}"
-        postfix_sasl_password: "{{ vault._postfix_sasl_password }}"
+        - include_role:
+            name: jnv.unattended-upgrades
+          vars:
+            unattended_origins_patterns:
+            - 'origin=Raspbian,codename=${distro_codename},label=Raspbian'
+            unattended_mail: "{{ vault._unattended_mail }}" 
+            unattended_mail_only_on_error: true
+            unattended_automatic_reboot: true
+            unattended_automatic_reboot_time: '03:00'
+            unattended_update_days: {"Fri"}
 
-    - { role: pihole-ufw, when: inventory_hostname == 'pihole' }
+        - include_role:
+            name: oefenweb.postfix
+          vars:
+            postfix_aliases:
+              - user: rpi
+                alias: "{{ vault._alias }}"
+            postfix_relayhost: "{{ vault._postfix_relayhost }}"
+            postfix_relaytls: true
+            postfix_smtp_tls_cafile: /etc/ssl/certs/ca-certificates.crt
+            postfix_sasl_user: "{{ vault._postfix_sasl_user }}"
+            postfix_sasl_password: "{{ vault._postfix_sasl_password }}"
 
-  # tasks:
-  #   - name: Apply UFW rules to pihole
-  #     include_tasks: roles/common/tasks/pihole_ufw.yml
-  #     when: inventory_hostname == 'pihole'
+        - include_role:
+            name: pihole-ufw
+          when: inventory_hostname == 'pihole'
 
+      rescue:
+        - include_tasks: roles/ssh-ca-client/tasks/cleanup.yml
+        
+      always:
+        - include_tasks: roles/ssh-ca-client/tasks/cleanup.yml

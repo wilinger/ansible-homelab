@@ -1,0 +1,71 @@
+---
+- name: Create temp directory
+  ansible.builtin.tempfile:
+    state: directory
+    suffix: ssh
+  register: tempdir
+  delegate_to: localhost
+  become: no
+  run_once: true
+
+- name: Generate SSH keys
+  openssh_keypair:
+    path: "{{ tempdir.path }}/id_rsa"
+    type: rsa
+    state: present
+    force: no
+  become: no
+  delegate_to: localhost
+  run_once: true
+
+- name: Read public key 
+  set_fact: 
+    temp_public_key: "{{ lookup('file', tempdir.path + '/id_rsa.pub') }} "
+  delegate_to: localhost
+  become: no
+  run_once: true
+
+- name: Authenticate approle
+  uri:
+    url: "{{ VAULT_ADDR }}/v1/auth/approle/login"
+    validate_certs: no
+    method: POST
+    body:  "{{ lookup('template', 'templates/vault_approle_ids.j2') }}"
+    body_format: json
+    return_content: yes
+  register: approle_auth
+  become: no
+  delegate_to: localhost
+  run_once: true
+
+- name: Sign public key
+  uri:
+    url: "{{ VAULT_ADDR }}/v1/ssh-client-signer/sign/clientrole"
+    validate_certs: no
+    method: POST
+    headers:
+      X-Vault-Token: "{{ approle_auth.json.auth.client_token }}"
+    body: "{{ lookup('template', 'templates/vault_public_key.j2') }}"
+    body_format: json
+    return_content: yes
+  register: clientrole
+  become: no
+  delegate_to: localhost
+  run_once: true
+
+- name: Store public signed key
+  copy:  
+    content: "{{ clientrole.json.data.signed_key }}" 
+    dest: "{{ tempdir.path }}/signed_key"
+  delegate_to: localhost
+  become: no
+  run_once: true
+
+- set_fact:
+    ansible_ssh_private_key_file: "{{ tempdir.path }}/id_rsa"
+
+- set_fact:
+    ansible_ssh_extra_args: "-i {{ tempdir.path }}/signed_key"
+
+- set_fact:
+    tempdir_path: "{{ tempdir.path }}"

@@ -1,0 +1,7 @@
+- name: cleanup tempdir
+  file:
+    state: absent
+    path: "{{ tempdir_path }}"
+  become: no
+  delegate_to: localhost
+  run_once: true
