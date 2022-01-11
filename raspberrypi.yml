@@ -1,6 +1,7 @@
 ---
 - hosts: rpi
   become: yes
+  gather_facts: no
 
   ## Secrets from ansible-vault
   # vars_files:
@@ -18,6 +19,9 @@
             VAULT_ADDR: "{{ vault._vault_addr }}"
             VAULT_ROLE_ID: "{{ lookup('env','ANSIBLE_HASHI_VAULT_ROLE_ID') }}"
             VAULT_SECRET_ID: "{{ lookup('env','ANSIBLE_HASHI_VAULT_SECRET_ID') }}"
+
+        - name: Gather facts
+          setup:
 
         - include_role:
             name: jnv.unattended-upgrades
