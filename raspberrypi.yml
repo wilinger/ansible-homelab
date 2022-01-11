@@ -24,6 +24,11 @@
           setup:
 
         - include_role:
+            name: ssh-ca-host
+          vars:
+            VAULT_ADDR: "{{ lookup('env','VAULT_ADDR') }}"
+
+        - include_role:
             name: jnv.unattended-upgrades
           vars:
             unattended_origins_patterns:

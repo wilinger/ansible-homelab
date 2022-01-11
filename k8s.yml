@@ -16,7 +16,6 @@
         - import_role:
             name: ssh-ca-client
           vars:
-            #VAULT_ADDR: "{{ vault._vault_addr }}"
             VAULT_ADDR: "{{ lookup('env','VAULT_ADDR') }}"
             VAULT_ROLE_ID: "{{ lookup('env','ANSIBLE_HASHI_VAULT_ROLE_ID') }}"
             VAULT_SECRET_ID: "{{ lookup('env','ANSIBLE_HASHI_VAULT_SECRET_ID') }}"
@@ -31,7 +30,6 @@
             name: ssh-ca-host
           vars:
             VAULT_ADDR: "{{ lookup('env','VAULT_ADDR') }}"
-          #   VAULT_ADDR: "{{ vault._vault_addr }}"
 
         - include_role:
             name: oefenweb.postfix
