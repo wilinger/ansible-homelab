@@ -30,6 +30,7 @@ provisioner:
   config_options:
     defaults:
       remote_tmp: /tmp/.ansible
+      inventory: hosts.yml
 verifier:
   name: ansible
 scenario:
