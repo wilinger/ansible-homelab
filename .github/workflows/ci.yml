@@ -20,11 +20,6 @@ jobs:
       - name: Check out the codebase.
         uses: actions/checkout@v2
 
-      # - name: Set up Python 3.
-      #   uses: actions/setup-python@v2
-      #   with:
-      #     python-version: '3.x'
-
       - name: Install test dependencies.
         run: pip3 install molecule[docker] yamllint ansible-lint
 

@@ -9,7 +9,7 @@ driver:
   name: docker
 lint: |
   set -e
-  yamllint .
+  yamllint --format github .
   ansible-lint
 platforms:
   - name: instance
