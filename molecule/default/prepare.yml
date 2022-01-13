@@ -1,0 +1,39 @@
+- name: Prepare
+  hosts: all
+  become: yes
+  gather_facts: false
+  vars:
+    remote_ansible_user: ansible
+  tasks:
+    # - name: install required base packages
+    #   apt:
+    #     name: ['openssh-server']
+    #     update_cache: yes
+    #     state: present
+
+    # - name: Update apt cache
+    #   apt:
+    #     update_cache: true
+    #     cache_valid_time: 3600
+
+    - name: apt update
+      shell: apt update
+
+    - name: start ssh
+      shell: service ssh start
+
+    - name: Make sure we have a 'wheel' group
+      group:
+        name: wheel
+        state: present
+
+    - name: Allow 'wheel' group to have passwordless sudo
+      lineinfile:
+        dest: /etc/sudoers
+        state: present
+        regexp: '^%wheel'
+        line: '%wheel ALL=(ALL) NOPASSWD: ALL'
+        validate: 'visudo -cf %s'
+
+    - name: Add sudoers users to wheel group
+      user: name={{ remote_ansible_user }} groups=wheel append=yes state=present createhome=yes

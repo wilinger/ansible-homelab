@@ -3,6 +3,7 @@
   hosts: all
   become: yes
   gather_facts: false
+  remote_user: ansible
   tasks:
     - name: Update apt cache
       apt:
