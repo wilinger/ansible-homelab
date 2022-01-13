@@ -10,9 +10,9 @@
         update_cache: true
         cache_valid_time: 3600
         
-    - name: start ssh
+    - name: start sshd
       service:
-        name: ssh
+        name: sshd
         state: started
 
 - import_playbook: ../../k8s.yml

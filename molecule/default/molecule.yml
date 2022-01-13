@@ -3,13 +3,14 @@ dependency:
   name: galaxy
   ignore-certs: True
   ignore-errors: True
-  requirements-file: "../../requirements.yml"
+  role-file: ../../requirements.yml
+  requirements-file: ../../requirements.yml
 driver:
   name: docker
-# lint: |
-#   set -e
-#   yamllint .
-#   ansible-lint
+lint: |
+  set -e
+  yamllint .
+  ansible-lint
 platforms:
   - name: instance
     image: willw0176/docker-${MOLECULE_DISTRO:-ubuntu2004}-molecule
@@ -20,12 +21,15 @@ platforms:
 provisioner:
   name: ansible
   env:
-    ANSIBLE_ROLES_PATH: "../../roles"
+    ANSIBLE_ROLES_PATH: ../../roles
   playbooks:
       prepare: prepare.yml
   inventory:
     links:
       hosts: hosts.yml
+  config_options:
+    defaults:
+      remote_tmp: /tmp/.ansible
 verifier:
   name: ansible
 scenario:

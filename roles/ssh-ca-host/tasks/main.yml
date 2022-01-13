@@ -12,7 +12,7 @@
     - { key: "PasswordAuthentication", value: "no" }
     # - { key: "AuthorizedPrincipalsFile", value: "/etc/ssh/auth_principals/%u" }
   notify:
-    - restart ssh
+    - restart sshd
 
 - name: Download trusted-CA.pem
   get_url:
