@@ -16,7 +16,6 @@ jobs:
     steps:
       - name: Check out the codebase.
         uses: actions/checkout@v2
-        uses: max/secret-scan@master
       
       - name: trufflehog-actions-scan
         uses: edplato/trufflehog-actions-scan@master
