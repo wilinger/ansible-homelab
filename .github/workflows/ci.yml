@@ -3,9 +3,6 @@ name: CI
 
 on:
   pull_request:
-  push:
-    branches:
-      - main
 
 jobs:
   test:
@@ -19,6 +16,12 @@ jobs:
     steps:
       - name: Check out the codebase.
         uses: actions/checkout@v2
+        fetch-depth: 0
+      
+      - name: trufflehog-actions-scan
+        uses: edplato/trufflehog-actions-scan@master
+        with:
+          scanArguments: "--regex --entropy=False --max_depth=5"
 
       - name: Install test dependencies.
         run: pip3 install molecule[docker] yamllint ansible-lint
