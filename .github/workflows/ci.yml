@@ -1,0 +1,39 @@
+---
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  test:
+    name: Molecule
+    runs-on: self-hosted
+    strategy:
+      matrix:
+        distro:
+          - ubuntu2004
+
+    steps:
+      - name: Check out the codebase.
+        uses: actions/checkout@v2
+
+      - name: Install test dependencies.
+        run: pip3 install molecule[docker] yamllint ansible-lint
+
+      - name: Install Ansible collections and roles
+        run: ansible-galaxy install -r requirements.yml
+
+      - name: Run Molecule tests.
+        run: molecule test
+        env:
+          PY_COLORS: '1'
+          ANSIBLE_FORCE_COLOR: '1'
+          MOLECULE_DISTRO: ${{ matrix.distro }}
+          VAULT_ADDR: ${{ secrets.VAULT_ADDR }}
+          ANSIBLE_HASHI_VAULT_ROLE_ID: ${{ secrets.VAULT_ROLE_ID }}
+          ANSIBLE_HASHI_VAULT_SECRET_ID: ${{ secrets.VAULT_SECRET_ID }}
+          ANSIBLE_DEPRECATION_WARNINGS: "False"
+    

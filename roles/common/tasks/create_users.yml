@@ -32,4 +32,3 @@
     validate: visudo -cf %s
   with_items:
     - '{{ deploy_user }}'
-

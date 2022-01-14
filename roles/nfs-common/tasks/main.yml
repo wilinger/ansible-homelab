@@ -3,5 +3,3 @@
   apt:
     name: nfs-common
     state: present
-
-
