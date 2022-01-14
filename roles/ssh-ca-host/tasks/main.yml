@@ -2,8 +2,8 @@
 - name: Configure sshd for ssh ca
   lineinfile:
     path: "/etc/ssh/sshd_config"
-    regex: "^(#)?{{item.key}}"
-    line: "{{item.key}} {{item.value}}"
+    regex: "^(#)?{{ item.key }}"
+    line: "{{ item.key }} {{ item.value }}"
     state: present
   loop:
     - { key: "ChallengeResponseAuthentication", value: "no" }
@@ -18,6 +18,6 @@
   get_url:
     url: "{{ VAULT_ADDR }}/v1/ssh-client-signer/public_key"
     dest: /etc/ssh/trusted-CA.pem
-    mode: 0640
+    mode: '0640'
     checksum: "md5:88d7d0cc4bc2011f28bc3d641114cdc7"
  

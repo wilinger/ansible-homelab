@@ -57,6 +57,7 @@
   copy:  
     content: "{{ clientrole.json.data.signed_key }}" 
     dest: "{{ tempdir.path }}/signed_key"
+    mode: '0644'
   delegate_to: localhost
   become: no
   run_once: true
