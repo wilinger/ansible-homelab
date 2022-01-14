@@ -16,9 +16,12 @@ jobs:
     steps:
       - name: Check out the codebase.
         uses: actions/checkout@v2
-        
-      - name: Scan for secrets with TruffleHog
         uses: max/secret-scan@master
+      
+      - name: trufflehog-actions-scan
+        uses: edplato/trufflehog-actions-scan@master
+        with:
+          scanArguments: "--regex --entropy=False --max_depth=5"
 
       # - name: Install test dependencies.
       #   run: pip3 install molecule[docker] yamllint ansible-lint
