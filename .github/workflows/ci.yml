@@ -16,28 +16,22 @@ jobs:
     steps:
       - name: Check out the codebase.
         uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-      
-      - name: trufflehog-actions-scan
-        uses: edplato/trufflehog-actions-scan@master
-        with:
-          scanArguments: "--regex --entropy=False --max_depth=5"
+        uses: max/secret-scan@master
 
-      - name: Install test dependencies.
-        run: pip3 install molecule[docker] yamllint ansible-lint
+      # - name: Install test dependencies.
+      #   run: pip3 install molecule[docker] yamllint ansible-lint
 
-      - name: Install Ansible collections and roles
-        run: ansible-galaxy install -r requirements.yml
+      # - name: Install Ansible collections and roles
+      #   run: ansible-galaxy install -r requirements.yml
 
-      - name: Run Molecule tests.
-        run: molecule test
-        env:
-          PY_COLORS: '1'
-          ANSIBLE_FORCE_COLOR: '1'
-          MOLECULE_DISTRO: ${{ matrix.distro }}
-          VAULT_ADDR: ${{ secrets.VAULT_ADDR }}
-          ANSIBLE_HASHI_VAULT_ROLE_ID: ${{ secrets.VAULT_ROLE_ID }}
-          ANSIBLE_HASHI_VAULT_SECRET_ID: ${{ secrets.VAULT_SECRET_ID }}
-          ANSIBLE_DEPRECATION_WARNINGS: "False"
+      # - name: Run Molecule tests.
+      #   run: molecule test
+      #   env:
+      #     PY_COLORS: '1'
+      #     ANSIBLE_FORCE_COLOR: '1'
+      #     MOLECULE_DISTRO: ${{ matrix.distro }}
+      #     VAULT_ADDR: ${{ secrets.VAULT_ADDR }}
+      #     ANSIBLE_HASHI_VAULT_ROLE_ID: ${{ secrets.VAULT_ROLE_ID }}
+      #     ANSIBLE_HASHI_VAULT_SECRET_ID: ${{ secrets.VAULT_SECRET_ID }}
+      #     ANSIBLE_DEPRECATION_WARNINGS: "False"
     
