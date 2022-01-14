@@ -1,11 +1,12 @@
 exclude_paths:
 - .cache/  # implicit unless exclude_paths is defined in config
 - .github/
+- .ansible-lint
 - molecule/
 - ${HOME}/.ansible/roles/
-- */ansible-lint/*
+- '*/ansible-lint/*'
 
 skip_list:
 - unnamed-task
 - var-naming
-- role-name
+- role-name 
