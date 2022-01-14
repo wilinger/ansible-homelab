@@ -16,6 +16,8 @@ jobs:
     steps:
       - name: Check out the codebase.
         uses: actions/checkout@v2
+        
+      - name: Scan for secrets with TruffleHog
         uses: max/secret-scan@master
 
       # - name: Install test dependencies.
