@@ -3,6 +3,7 @@ exclude_paths:
 - .github/
 - molecule/
 - ${HOME}/.ansible/roles/
+- */ansible-lint/*
 
 skip_list:
 - unnamed-task
