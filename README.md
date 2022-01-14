@@ -7,3 +7,5 @@ To do write ups:
 - Secrets via hashi-vault plugin with approle authentication
 - Playbook of playbooks
 - Molecule linting and testing
+- Snyk vulnerabilities scanning integration
+- Gitguardian secrets scanning integration
