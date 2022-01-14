@@ -4,7 +4,7 @@ exclude_paths:
 - .ansible-lint
 - molecule/
 - ${HOME}/.ansible/roles/
-- '*/ansible-lint/*'
+- /home/runner/.cache/ansible-lint/
 
 skip_list:
 - unnamed-task
