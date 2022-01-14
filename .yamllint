@@ -1,6 +1,12 @@
 ---
 # Based on ansible-lint config
-extends: default
+ignore: |
+  README.md
+
+yaml-files:
+  - '*.yaml'
+  - '*.yml'
+  - '.yamllint'
 
 rules:
   braces:
