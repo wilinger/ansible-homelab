@@ -22,15 +22,14 @@ provisioner:
   name: ansible
   env:
     ANSIBLE_ROLES_PATH: ../../roles
-    ANSIBLE_INVENTORY_PLUGINS: host_list,script,auto,yaml,ini,toml
   playbooks:
       prepare: prepare.yml
   inventory:
     links:
       hosts: hosts.yml
-  config_options:
-    defaults:
-      remote_tmp: /tmp/.ansible
+  # config_options:
+  #   defaults:
+  #     remote_tmp: /tmp/.ansible
 verifier:
   name: ansible
 scenario:
