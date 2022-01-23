@@ -46,8 +46,12 @@ Playbooks are tested and verified using [Molecule](https://molecule.readthedocs.
 
 The molecule run also performs linting tests using [yamllint](https://github.com/adrienverge/yamllint) and [ansible-lint](https://ansible-lint.readthedocs.io/en/latest/).
 
+### Related Repositories
+
+* [terraform-homelab](https://github.com/wilinger/terraform-homelab)
+* [argocd-homelab](https://github.com/wilinger/argocd-homelab)
+
 ### To do 
 * CIS controls
 * secrets prevention and detection write up
-
 
