@@ -46,6 +46,8 @@ Playbooks are tested and verified using [Molecule](https://molecule.readthedocs.
 
 The molecule run also performs linting tests using [yamllint](https://github.com/adrienverge/yamllint) and [ansible-lint](https://ansible-lint.readthedocs.io/en/latest/).
 
-### CIS controls
-* TO do
+### To do 
+* CIS controls
+* secrets prevention and detection write up
+
 
