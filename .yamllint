@@ -3,6 +3,7 @@
 ignore: |
   README.md
   LICENSE.md
+  sonar-project.properties
 
 yaml-files:
   - '*.yaml'
