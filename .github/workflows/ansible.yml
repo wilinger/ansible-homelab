@@ -17,13 +17,13 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
 
-    # Already installed in custom container    
+    # Already installed in custom container
     # - name: Install pip dependencies
     #   run: pip install -r requirements.txt
 
     - name: Install Ansible collections and roles
       run: ansible-galaxy install -r requirements.yml
-    
+
     - name: Run Ansible Playbook
       run: ansible-playbook -i inventory/hosts.yml all-playbooks.yml
       env:

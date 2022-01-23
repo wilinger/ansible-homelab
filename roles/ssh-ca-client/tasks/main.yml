@@ -18,8 +18,8 @@
   delegate_to: localhost
   run_once: true
 
-- name: Read public key 
-  set_fact: 
+- name: Read public key
+  set_fact:
     temp_public_key: "{{ lookup('file', tempdir.path + '/id_rsa.pub') }} "
   delegate_to: localhost
   become: no
@@ -54,8 +54,8 @@
   run_once: true
 
 - name: Store public signed key
-  copy:  
-    content: "{{ clientrole.json.data.signed_key }}" 
+  copy:
+    content: "{{ clientrole.json.data.signed_key }}"
     dest: "{{ tempdir.path }}/signed_key"
     mode: '0644'
   delegate_to: localhost
@@ -70,3 +70,4 @@
 
 - set_fact:
     tempdir_path: "{{ tempdir.path }}"
+
