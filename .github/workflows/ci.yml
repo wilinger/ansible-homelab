@@ -31,13 +31,30 @@ jobs:
         with:
           fetch-depth: 0
       
-      - name: Install test dependencies.
-        run: pip3 install molecule[docker] yamllint ansible-lint
+      - name: Set filters
+        uses: dorny/paths-filter@v2
+        id: filters
+        with:
+          filters: |
+            ansible:
+              - 'roles/**'
+              - 'inventory/**'
+              - 'group_vars/**'
+              - 'host_vars/**'
+              - 'vars/**'
+              - 'molecule/**'
+              - '*.yml'
 
+      - name: Install test dependencies.
+        if: steps.filters.outputs.ansible == 'true'
+        run: pip3 install molecule[docker] yamllint ansible-lint
+        
       - name: Install Ansible collections and roles
+        if: steps.filters.outputs.ansible == 'true'
         run: ansible-galaxy install -r requirements.yml
 
       - name: Run Molecule tests.
+        if: steps.filters.outputs.ansible == 'true'
         run: molecule test
         env:
           PY_COLORS: '1'
