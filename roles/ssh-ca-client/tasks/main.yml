@@ -70,4 +70,3 @@
 
 - set_fact:
     tempdir_path: "{{ tempdir.path }}"
-

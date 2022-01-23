@@ -39,7 +39,13 @@ The benefit of using Hashicorp Vault over Ansible's vault:
 * No need to store the vault password on a file locally or passed through the command line.
 * Secure central management of secrets using [Vault's KV Secrets Engine](https://www.vaultproject.io/docs/secrets/kv) without decrypting and re-encrypting secrets in a file which raises the risk of accidentally committing secrets to a repositry.
 
-Example usage of using a Vault AppRole to retrieve secrets can be seen in the [k8s.yml](k8s.yml) playbook using the [hashi_vault plugin](https://docs.ansible.com/ansible/latest/collections/community/hashi_vault/hashi_vault_lookup.html). Note that the VAULT_ADDR, ANSIBLE_HASHI_VAULT_ROLE_ID, ANSIBLE_HASHI_VAULT_SECRET_ID environment variables are set in in a [Github Actions ansible workflow](.github/workflows/ansible.yml).
+Example usage of using a Vault AppRole to retrieve secrets can be seen in the [k8s.yml](k8s.yml) playbook using the [hashi_vault plugin](https://docs.ansible.com/ansible/latest/collections/community/hashi_vault/hashi_vault_lookup.html). Note that the VAULT_ADDR, ANSIBLE_HASHI_VAULT_ROLE_ID, ANSIBLE_HASHI_VAULT_SECRET_ID environment variables are set in in a [Github Actions ansible workflow](.github/workflows/ansible.yml).  
 
+### Molecule linting and testing
+Playbooks are tested and verified using [Molecule](https://molecule.readthedocs.io/en/latest/).  This uses a custom [docker image](https://github.com/wilinger/docker-ubuntu2004-molecule) built with openssh-server installed and systemd script to execute the systemd command without systemd.
 
-###Molecule linting and testing
+The molecule run also performs linting tests using [yamllint](https://github.com/adrienverge/yamllint) and [ansible-lint](https://ansible-lint.readthedocs.io/en/latest/).
+
+### CIS controls
+* TO do
+
