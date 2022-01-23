@@ -2,6 +2,7 @@
 # Based on ansible-lint config
 ignore: |
   README.md
+  LICENSE.md
 
 yaml-files:
   - '*.yaml'
