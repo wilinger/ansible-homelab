@@ -11,9 +11,9 @@ Example Ansible playbooks and roles used to configure k8s nodes and various serv
 * Retrieving secrets with [Vault AppRole Auth Method](https://www.vaultproject.io/docs/auth/approle) and [hashi_vault plugin](https://docs.ansible.com/ansible/latest/collections/community/hashi_vault/hashi_vault_lookup.html)
 * Ansible playbook testing with [Molecule](https://molecule.readthedocs.io/en/latest/)
 * Ansible linting with [yamllint](https://github.com/adrienverge/yamllint) and [ansible-lint](https://ansible-lint.readthedocs.io/en/latest/)
+* Code quality and SAST scan with [SonarCloud](https://sonarcloud.io/)
 * Pre-commit hook to prevent commiting secrets with [git-secrets](https://github.com/awslabs/git-secrets)
 * Secrets detection with [ggshield](https://github.com/GitGuardian/ggshield)
-<p align="right">(<a href="#top">back to top</a>)</p>
 
 
 <!-- Details -->
@@ -54,4 +54,5 @@ The molecule run also performs linting tests using [yamllint](https://github.com
 ### To do 
 * CIS controls
 * secrets prevention and detection write up
+* SonarCloud SAST and code quality write up
 
