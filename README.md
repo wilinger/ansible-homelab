@@ -1,5 +1,7 @@
 [![CI](https://github.com/wilinger/ansible-homelab/actions/workflows/ci.yml/badge.svg)](https://github.com/wilinger/ansible-homelab/actions/workflows/ci.yml)
-
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=wilinger_ansible-homelab&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=wilinger_ansible-homelab)
+[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=wilinger_ansible-homelab&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=wilinger_ansible-homelab)
+[![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=wilinger_ansible-homelab&metric=vulnerabilities)](https://sonarcloud.io/summary/new_code?id=wilinger_ansible-homelab)
 
 <!-- ABOUT THE PROJECT -->
 ## Configuration Management with Ansible
