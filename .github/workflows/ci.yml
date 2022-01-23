@@ -5,7 +5,19 @@ on:
   pull_request:
 
 jobs:
-  test:
+  sonarcloud:
+    name: SonarCloud
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarcloud-github-action@master
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+  molecule:
     name: Molecule
     runs-on: self-hosted
     strategy:
@@ -16,14 +28,33 @@ jobs:
     steps:
       - name: Check out the codebase.
         uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      
+      - name: Set filters
+        uses: dorny/paths-filter@v2
+        id: filters
+        with:
+          filters: |
+            ansible:
+              - 'roles/**'
+              - 'inventory/**'
+              - 'group_vars/**'
+              - 'host_vars/**'
+              - 'vars/**'
+              - 'molecule/**'
+              - '*.yml'
 
       - name: Install test dependencies.
+        if: steps.filters.outputs.ansible == 'true'
         run: pip3 install molecule[docker] yamllint ansible-lint
-
+        
       - name: Install Ansible collections and roles
+        if: steps.filters.outputs.ansible == 'true'
         run: ansible-galaxy install -r requirements.yml
 
       - name: Run Molecule tests.
+        if: steps.filters.outputs.ansible == 'true'
         run: molecule test
         env:
           PY_COLORS: '1'
