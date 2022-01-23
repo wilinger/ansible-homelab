@@ -19,6 +19,7 @@ jobs:
 
   molecule:
     name: Molecule
+    needs: [sonarcloud]
     runs-on: self-hosted
     strategy:
       matrix:
