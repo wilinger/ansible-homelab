@@ -7,6 +7,7 @@
   delegate_to: localhost
   become: no
   run_once: true
+  changed_when: false
 
 - name: Generate SSH keys
   openssh_keypair:
@@ -17,6 +18,7 @@
   become: no
   delegate_to: localhost
   run_once: true
+  changed_when: false
 
 - name: Read public key
   set_fact:
@@ -61,6 +63,7 @@
   delegate_to: localhost
   become: no
   run_once: true
+  changed_when: false
 
 - set_fact:
     ansible_ssh_private_key_file: "{{ tempdir.path }}/id_rsa"
