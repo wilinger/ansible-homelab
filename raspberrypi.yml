@@ -3,11 +3,7 @@
   become: yes
   gather_facts: no
 
-  ## Secrets from ansible-vault
-  # vars_files:
-  #  - vars/config.yml
-
-  ## Secrets from hashi-vault
+  # hashi-vault
   vars:
     vault: "{{ lookup('community.hashi_vault.hashi_vault', 'secret=kv-v2/data/secret/ansible auth_method=approle') }}"
 
@@ -15,6 +11,7 @@
     - block:
         - import_role:
             name: ssh-ca-client
+          when: ansible_ssh_private_key_file is undefined # pass --private-key and --limit for new hosts once
           vars:
             VAULT_ADDR: "{{ lookup('env','VAULT_ADDR') }}"
             VAULT_ROLE_ID: "{{ lookup('env','ANSIBLE_HASHI_VAULT_ROLE_ID') }}"
@@ -57,6 +54,8 @@
 
       rescue:
         - include_tasks: roles/ssh-ca-client/tasks/cleanup.yml
+          when: ansible_ssh_private_key_file is undefined
         
       always:
         - include_tasks: roles/ssh-ca-client/tasks/cleanup.yml
+          when: ansible_ssh_private_key_file is undefined
