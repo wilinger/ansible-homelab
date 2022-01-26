@@ -4,4 +4,5 @@
     path: "{{ tempdir_path }}"
   become: no
   delegate_to: localhost
+  delegate_facts: true
   run_once: true
