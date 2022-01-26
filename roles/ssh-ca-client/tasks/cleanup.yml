@@ -1,19 +1,10 @@
 ---
-- name: Register tempdir
-  stat:
+- name: cleanup tempdir
+  file:
+    state: absent
     path: "{{ tempdir_path }}"
-  register: tempout
   become: no
   delegate_to: localhost
+  when: tempdir_path is defined
+  changed_when: false
   run_once: true
-
-- name: Check if tempdir exists
-  debug:
-    msg: "tempdir exists"
-  when: tempout.stat.exists and tempout.stat.isdir
-  changed_when: tempout.stat.exists and tempout.stat.isdir
-  become: no
-  delegate_to: localhost
-  run_once: true
-  notify:
-   - cleanup tempdir

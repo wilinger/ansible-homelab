@@ -66,10 +66,6 @@
   changed_when: false
 
 - set_fact:
-    ansible_ssh_private_key_file: "{{ tempdir.path }}/id_rsa"
-
-- set_fact:
-    ansible_ssh_extra_args: "-i {{ tempdir.path }}/signed_key"
-
-- set_fact:
     tempdir_path: "{{ tempdir.path }}"
+    ansible_ssh_extra_args: "-i {{ tempdir.path }}/signed_key"
+    ansible_ssh_private_key_file: "{{ tempdir.path }}/id_rsa"

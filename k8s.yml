@@ -9,7 +9,8 @@
 
   tasks:
     - block:
-        - import_role: 
+        - name: Authenticate via signed SSH certificate
+          import_role: 
             name: ssh-ca-client
           when: ansible_ssh_private_key_file is undefined # pass --private-key and --limit for new hosts once
           vars:
@@ -54,8 +55,10 @@
 
       rescue:
         - include_tasks: roles/ssh-ca-client/tasks/cleanup.yml
-          when: ansible_ssh_private_key_file is undefined
+          run_once: true
+          when: tempdir_path is defined
 
       always:
         - include_tasks: roles/ssh-ca-client/tasks/cleanup.yml
-          when: ansible_ssh_private_key_file is undefined
+          run_once: true
+          when: tempdir_path is defined

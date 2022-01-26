@@ -54,8 +54,9 @@
 
       rescue:
         - include_tasks: roles/ssh-ca-client/tasks/cleanup.yml
-          when: ansible_ssh_private_key_file is undefined
+          when: tempdir_path is defined
+
         
       always:
         - include_tasks: roles/ssh-ca-client/tasks/cleanup.yml
-          when: ansible_ssh_private_key_file is undefined
+          when: tempdir_path is defined
