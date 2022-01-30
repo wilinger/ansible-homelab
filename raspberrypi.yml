@@ -54,10 +54,15 @@
           when: inventory_hostname == 'pihole'
 
       rescue:
-        - include_tasks: roles/ssh-ca-client/tasks/cleanup.yml
+        - include_role:
+            name: ssh-ca-client
+            tasks_from: cleanup
+          run_once: true
           when: tempdir_path is defined
 
-        
       always:
-        - include_tasks: roles/ssh-ca-client/tasks/cleanup.yml
+        - include_role:
+            name: ssh-ca-client
+            tasks_from: cleanup
+          run_once: true
           when: tempdir_path is defined
