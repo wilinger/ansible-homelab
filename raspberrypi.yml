@@ -10,21 +10,22 @@
   tasks:
     - block:
         - name: Authenticate via signed SSH certificate
-          import_role:
-            name: ssh-ca-client
+          import_role: 
+            name: vault-ssh-ca
+            tasks_from: ssh-client
           when: ansible_ssh_private_key_file is undefined # pass --private-key and --limit for new hosts once
           vars:
-            VAULT_ADDR: "{{ lookup('env','VAULT_ADDR') }}"
-            VAULT_ROLE_ID: "{{ lookup('env','ANSIBLE_HASHI_VAULT_ROLE_ID') }}"
-            VAULT_SECRET_ID: "{{ lookup('env','ANSIBLE_HASHI_VAULT_SECRET_ID') }}"
+            vault_addr: "{{ lookup('env','VAULT_ADDR') }}"
+            vault_role_id: "{{ lookup('env','ANSIBLE_HASHI_VAULT_ROLE_ID') }}"
+            vault_secret_id: "{{ lookup('env','ANSIBLE_HASHI_VAULT_SECRET_ID') }}"
 
         - name: Gather facts
           setup:
 
         - include_role:
-            name: ssh-ca-host
+            name: vault-ssh-ca
           vars:
-            VAULT_ADDR: "{{ lookup('env','VAULT_ADDR') }}"
+            vault_addr: "{{ lookup('env','VAULT_ADDR') }}"
 
         - include_role:
             name: jnv.unattended-upgrades
@@ -55,14 +56,14 @@
 
       rescue:
         - include_role:
-            name: ssh-ca-client
+            name: vault-ssh-ca
             tasks_from: cleanup
           run_once: true
           when: tempdir_path is defined
 
       always:
         - include_role:
-            name: ssh-ca-client
+            name: vault-ssh-ca
             tasks_from: cleanup
           run_once: true
           when: tempdir_path is defined

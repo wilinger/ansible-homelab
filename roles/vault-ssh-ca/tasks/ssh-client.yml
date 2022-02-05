@@ -29,7 +29,7 @@
 
 - name: Authenticate approle
   uri:
-    url: "{{ VAULT_ADDR }}/v1/auth/approle/login"
+    url: "{{ app_role_login_url }}"
     validate_certs: no
     method: POST
     body:  "{{ lookup('template', 'templates/vault_approle_ids.j2') }}"
@@ -42,7 +42,7 @@
 
 - name: Sign public key
   uri:
-    url: "{{ VAULT_ADDR }}/v1/ssh-client-signer/sign/clientrole"
+    url: "{{ ssh_client_signer_url }}"
     validate_certs: no
     method: POST
     headers:
