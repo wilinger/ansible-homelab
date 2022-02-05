@@ -30,9 +30,8 @@ Using personal SSH private keys to authenticate to servers raises the risk of un
 * No need for key rotation. With Signed SSH Certificates, there is no longer a need to worry about rotating keys to meet compliance requirements or when a user leaves the company.
 * Better scalability. Managing personal keys across multiple systems and cloud environments consistently can be a complex operation. Using Vault as an SSH certificate authority, you can allow access via an external authentication source such as LDAP or OIDC authentication.
 
-For my homelab, hosts are configured with [Vault SSH CA host role](roles/ssh-ca-host/tasks/main.yml) to accept connections with signed certificates.  
-Authentication to hosts is achieved with [Vault SSH CA client role](roles/ssh-ca-client/tasks/main.yml).  
-Refer to [Github Actions ansible workflow](.github/workflows/ansible.yml) and the actual [run](https://github.com/wilinger/ansible-homelab/runs/4820408902?check_suite_focus=true) to see it in action.  
+For my homelab, hosts are configured with [Vault SSH CA role](roles/vault-ssh-ca) to accept connections with signed certificates and authenticated with [ssh-client task](roles/vault-ssh-ca/tasks/ssh-client.yml).  Refer to [k8s.yml](k8s.yml) playbook for example usage.
+Refer to [Github Actions ansible workflow](.github/workflows/ansible.yml) and the actual [run](https://github.com/wilinger/ansible-homelab/runs/5079785643?check_suite_focus=true) to see it in action.  
 
 
 ### Retrieving secrets for roles
