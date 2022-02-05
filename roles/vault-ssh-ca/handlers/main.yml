@@ -1,3 +1,9 @@
+---
+- name: restart sshd
+  service:
+    name: sshd
+    state: restarted
+
 - name: cleanup tempdir
   file:
     state: absent

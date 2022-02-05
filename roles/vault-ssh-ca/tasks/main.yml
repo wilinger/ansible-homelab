@@ -16,8 +16,8 @@
 
 - name: Download trusted-CA.pem
   get_url:
-    url: "{{ VAULT_ADDR }}/v1/ssh-client-signer/public_key"
-    dest: /etc/ssh/trusted-CA.pem
+    url: "{{ trusted_ca_url }}"
+    dest: "{{ trusted_ca_dest }}"
     mode: '0640'
-    checksum: "md5:88d7d0cc4bc2011f28bc3d641114cdc7"
- 
+    checksum: "md5:{{ trusted_ca_md5 }}"
+    force: true

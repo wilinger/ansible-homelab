@@ -1,0 +1,9 @@
+---
+vault_addr: "{{ lookup('env','VAULT_ADDR') }}"
+vault_role_id: "{{ lookup('env','ANSIBLE_HASHI_VAULT_ROLE_ID') }}"
+vault_secret_id: "{{ lookup('env','ANSIBLE_HASHI_VAULT_SECRET_ID') }}"
+trusted_ca_url: "{{ vault_addr }}/v1/ssh-client-signer/public_key"
+trusted_ca_dest: /etc/ssh/trusted-CA.pem
+trusted_ca_md5: "88d7d0cc4bc2011f28bc3d641114cdc7"
+app_role_login_url: "{{ vault_addr }}/v1/auth/approle/login"
+ssh_client_signer_url: "{{ vault_addr }}/v1/ssh-client-signer/sign/clientrole"
