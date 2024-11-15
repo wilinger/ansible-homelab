@@ -1,0 +1,69 @@
+---
+- hosts: pihole
+  become: yes
+  gather_facts: no
+
+  # hashi-vault
+  vars:
+    vault: "{{ lookup('community.hashi_vault.hashi_vault', 'secret=kv-v2/data/secret/ansible auth_method=approle') }}"
+
+  tasks:
+    - block:
+        - name: Authenticate via signed SSH certificate
+          import_role: 
+            name: vault-ssh-ca
+            tasks_from: ssh-client
+          when: ansible_ssh_private_key_file is undefined # pass --private-key and --limit for new hosts once
+          vars:
+            vault_addr: "{{ lookup('env','VAULT_ADDR') }}"
+            vault_role_id: "{{ lookup('env','ANSIBLE_HASHI_VAULT_ROLE_ID') }}"
+            vault_secret_id: "{{ lookup('env','ANSIBLE_HASHI_VAULT_SECRET_ID') }}"
+
+        - name: Gather facts
+          setup:
+
+        - include_role:
+            name: vault-ssh-ca
+          vars:
+            vault_addr: "{{ lookup('env','VAULT_ADDR') }}"
+
+        - include_role:
+            name: jnv.unattended-upgrades
+          vars:
+            unattended_origins_patterns:
+            - 'origin=Raspbian,codename=${distro_codename},label=Raspbian'
+            unattended_mail: "{{ vault._unattended_mail }}" 
+            unattended_mail_only_on_error: true
+            unattended_automatic_reboot: true
+            unattended_automatic_reboot_time: '03:00'
+            unattended_update_days: {"Fri"}
+
+        - include_role:
+            name: oefenweb.postfix
+          vars:
+            postfix_aliases:
+              - user: rpi
+                alias: "{{ vault._alias }}"
+            postfix_relayhost: "{{ vault._postfix_relayhost }}"
+            postfix_relaytls: true
+            postfix_smtp_tls_cafile: /etc/ssl/certs/ca-certificates.crt
+            postfix_sasl_user: "{{ vault._postfix_sasl_user }}"
+            postfix_sasl_password: "{{ vault._postfix_sasl_password }}"
+
+        - include_role:
+            name: pihole-ufw
+          when: inventory_hostname == 'pihole'
+
+      rescue:
+        - include_role:
+            name: vault-ssh-ca
+            tasks_from: cleanup
+          run_once: true
+          when: tempdir_path is defined
+
+      always:
+        - include_role:
+            name: vault-ssh-ca
+            tasks_from: cleanup
+          run_once: true
+          when: tempdir_path is defined

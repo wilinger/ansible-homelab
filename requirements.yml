@@ -1,14 +1,10 @@
 ---
 roles:
   - name: oefenweb.postfix
-    version: v3.6.1
-  - name: jnv.unattended-upgrades
-    version: v1.12.1
+  - name: hifis.unattended_upgrades
+  - name: geerlingguy.security
   - src: andrewrothstein.docker_engine
-    version: v0.1.4
 
 collections:
   - name: community.hashi_vault
-    version: 2.1.0
   - name: community.general
-    version: 4.2.0

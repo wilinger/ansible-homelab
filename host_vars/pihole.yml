@@ -1,0 +1,5 @@
+ansible_ssh_common_args: '-o ProxyCommand="$(which cloudflared) access ssh --hostname %h --id $CF_ID --secret $CF_SECRET" '
+ansible_user: noble
+ansible_python_interpreter: /usr/bin/python3
+ansible_ssh_private_key_file: ~/.ssh/master
+ansible_ssh_common_args: '-o StrictHostKeyChecking=no'

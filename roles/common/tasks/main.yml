@@ -1,0 +1,12 @@
+---
+- name: Allow passwordless for user
+  copy:
+    dest: '/etc/sudoers.d/{{ item }}'
+    owner: root
+    group: root
+    mode: 0440
+    content: |
+      {{ item }} ALL=(ALL) NOPASSWD:ALL
+    validate: visudo -cf %s
+  with_items:
+    - '{{ deploy_user }}'

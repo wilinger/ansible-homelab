@@ -1,69 +1,46 @@
 ---
-- hosts: rpi
+- hosts: pihole
   become: yes
-  gather_facts: no
-
-  # hashi-vault
+  gather_facts: yes
   vars:
-    vault: "{{ lookup('community.hashi_vault.hashi_vault', 'secret=kv-v2/data/secret/ansible auth_method=approle') }}"
+    deploy_user: noble
 
-  tasks:
-    - block:
-        - name: Authenticate via signed SSH certificate
-          import_role: 
-            name: vault-ssh-ca
-            tasks_from: ssh-client
-          when: ansible_ssh_private_key_file is undefined # pass --private-key and --limit for new hosts once
-          vars:
-            vault_addr: "{{ lookup('env','VAULT_ADDR') }}"
-            vault_role_id: "{{ lookup('env','ANSIBLE_HASHI_VAULT_ROLE_ID') }}"
-            vault_secret_id: "{{ lookup('env','ANSIBLE_HASHI_VAULT_SECRET_ID') }}"
+  roles:
+    - role: common
+        
+    # - include_role: 
+    #     name: oefenweb.postfix
+    #     apply:
+    #       tags: ['postfix']
+    #   vars:
+    #     postfix_aliases:
+    #       - user: "{{ deploy_user }}"
+    #         alias: "{{ lookup('env','POSTFIX_ALIAS') }}"
+    #     postfix_relayhost: "{{ lookup('env','POSTFIX_RELAYHOST') }}"
+    #     postfix_relaytls: true
+    #     postfix_smtp_tls_cafile: /etc/ssl/certs/ca-certificates.crt
+    #     postfix_sasl_user: "{{ lookup('env','POSTFIX_SASL_USER') }}"
+    #     postfix_sasl_password: "{{ lookup('env','POSTFIX_SASL_PASSWORD') }}"
+    #   tags: ['always']
 
-        - name: Gather facts
-          setup:
+    - role: geerlingguy.security
+      vars:
+        security_ssh_port: 22
+        security_ssh_allowed_users:
+          - "{{ deploy_user }}"
+        security_sudoers_passwordless:
+          - "{{ deploy_user }}"
+        security_autoupdate_mail_to: "wil831@gmail.com"
+        security_autoupdate_mail_on_error: true
+        security_fail2ban_enabled: true
+        security_fail2ban_custom_configuration_template: "jail.local.j2"
 
-        - include_role:
-            name: vault-ssh-ca
-          vars:
-            vault_addr: "{{ lookup('env','VAULT_ADDR') }}"
+    - role: hifis.unattended_upgrades
+      unattended_origins_patterns:
+      - "origin=Raspbian,codename=${distro_codename},label=Raspbian"
+      - "origin=Debian,codename=${distro_codename}-security,label=Debian-Security"
+      unattended_package_blacklist: [cowsay, vim]
+      unattended_mail: 'wil831@gmail.com'
 
-        - include_role:
-            name: jnv.unattended-upgrades
-          vars:
-            unattended_origins_patterns:
-            - 'origin=Raspbian,codename=${distro_codename},label=Raspbian'
-            unattended_mail: "{{ vault._unattended_mail }}" 
-            unattended_mail_only_on_error: true
-            unattended_automatic_reboot: true
-            unattended_automatic_reboot_time: '03:00'
-            unattended_update_days: {"Fri"}
-
-        - include_role:
-            name: oefenweb.postfix
-          vars:
-            postfix_aliases:
-              - user: rpi
-                alias: "{{ vault._alias }}"
-            postfix_relayhost: "{{ vault._postfix_relayhost }}"
-            postfix_relaytls: true
-            postfix_smtp_tls_cafile: /etc/ssl/certs/ca-certificates.crt
-            postfix_sasl_user: "{{ vault._postfix_sasl_user }}"
-            postfix_sasl_password: "{{ vault._postfix_sasl_password }}"
-
-        - include_role:
-            name: pihole-ufw
-          when: inventory_hostname == 'pihole'
-
-      rescue:
-        - include_role:
-            name: vault-ssh-ca
-            tasks_from: cleanup
-          run_once: true
-          when: tempdir_path is defined
-
-      always:
-        - include_role:
-            name: vault-ssh-ca
-            tasks_from: cleanup
-          run_once: true
-          when: tempdir_path is defined
+    # - role: pihole-ufw
+    #   when: inventory_hostname == 'pihole'
