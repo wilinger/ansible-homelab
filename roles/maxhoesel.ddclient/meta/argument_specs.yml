@@ -1,0 +1,41 @@
+argument_specs:
+  main:
+    short_description: Main entrypoint
+    options:
+      ddclient_version:
+        type: str
+        default: develop
+        description: Version of ddclient to install
+      ddclient_executable_path:
+        type: str
+        default: /usr/local/sbin/ddclient
+        description: Where to put the ddclient executable
+      ddclient_configfile:
+        type: str
+        default: /etc/ddclient.conf
+        description: Config file to use for the ddclient installation
+      ddclient_pidfile:
+        type: str
+        default: /var/run/ddclient.pid
+        description: PID file to use for the ddclient daemon
+      ddclient_systemd_unit:
+        type: str
+        default: ddclient
+        description: Name of the unit file for the ddclient daemon
+      ddclient_interval:
+        type: int
+        default: 300
+        description: Number of seconds between DynDNS IP checks
+      ddclient_mail:
+        type: str
+        default: root
+        description: Send all updates to this user/mail address
+      ddclient_mail_failure:
+        type: str
+        default: root
+        description: Send all failures to this user/mail address
+      ddclient_entries:
+        type: list
+        elements: dict
+        default: []
+        description: List of ddclient configuration entries

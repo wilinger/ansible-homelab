@@ -1,0 +1,11 @@
+[Unit]
+Description=Dynamic DNS Update Client
+After=network.target
+
+[Service]
+Type=forking
+PIDFile={{ ddclient_pidfile }}
+ExecStart={{ ddclient_executable_path }} -file {{ ddclient_configfile }}
+
+[Install]
+WantedBy=multi-user.target

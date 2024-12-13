@@ -1,0 +1,10 @@
+- name: Verify
+  hosts: all
+  tasks:
+  - name: Get service info
+    service_facts:
+  - name: Check that daemon is running
+    assert:
+      that:
+        - 'ansible_facts.services["ddclient-test.service"].state == "running"'
+        - 'ansible_facts.services["ddclient-test.service"].status == "enabled"'

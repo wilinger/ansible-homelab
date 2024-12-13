@@ -1,0 +1,33 @@
+name: CI
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+defaults:
+  run:
+    working-directory: ddclient
+
+jobs:
+  lint:
+    name: "CI"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out codebase
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+          path: ddclient
+
+      - name: Set up Python 3
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.8"
+      - name: Set up pip
+        run: pip3 install --upgrade pip
+
+      - name: Install tox
+        run: sudo apt update && sudo apt install -y tox
+
+      - name: Run Tox
+        run: tox

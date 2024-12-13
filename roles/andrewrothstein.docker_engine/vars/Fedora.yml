@@ -1,0 +1,10 @@
+---
+docker_engine_installer: yum-repos
+docker_engine_pkgs:
+  - docker-ce
+  - docker-ce-cli
+  - containerd.io
+
+docker_engine_yum_repo_params:
+  mirror: https://download.docker.com/linux/fedora/$releasever
+  gpgkey: https://download.docker.com/linux/fedora/gpg

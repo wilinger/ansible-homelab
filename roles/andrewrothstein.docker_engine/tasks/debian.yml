@@ -1,0 +1,18 @@
+---
+# instructions per https://docs.docker.com/install/linux/docker-ce/debian/
+- name: Add apt key
+  become: true
+  become_user: root
+  ansible.builtin.apt_key:
+    url: 'https://download.docker.com/linux/{{ ansible_distribution | lower }}/gpg'
+    id: 9DC858229FC7DD38854AE2D88D81803C0EBFCD88
+    state: present
+- name: Add apt repository
+  become: true
+  become_user: root
+  ansible.builtin.apt_repository:
+    repo: 'deb [arch=amd64] https://download.docker.com/linux/{{ ansible_distribution | lower }} {{ ansible_distribution_release }} stable'
+    filename: docker-ce
+    state: present
+- name: Installing OS pkgs
+  ansible.builtin.include_tasks: os-pkgs.yml

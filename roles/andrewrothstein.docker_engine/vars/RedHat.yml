@@ -1,0 +1,16 @@
+---
+docker_engine_installer: yum-repos
+docker_engine_group: root
+
+docker_engine_yum_repo_params:
+  mirror: https://download.docker.com/linux/centos/{{ ansible_distribution_major_version }}
+  gpgkey: https://download.docker.com/linux/centos/gpg
+
+docker_engine_pkgs:
+  - docker-ce
+  - docker-ce-cli
+  - containerd.io
+
+docker_engine_addl_pkgs:
+  lvm:
+    - lvm2

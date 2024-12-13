@@ -1,0 +1,23 @@
+---
+ddclient_version: "develop"
+
+ddclient_executable_path: /usr/local/sbin/ddclient
+ddclient_configfile: /etc/ddclient.conf
+ddclient_pidfile: /var/run/ddclient.pid
+ddclient_systemd_unit: ddclient
+
+ddclient_interval: 300
+ddclient_mail: root
+ddclient_mail_failure: root
+
+ddclient_entries: []
+#- options:
+#    protocol: cloudflare
+#    zone: domain.tld
+#    ttl: 60
+#    login: your-login-email
+#    password: APIKey
+#    ...
+#  domains:
+#  - domain.tld
+#  - my.domain.tld

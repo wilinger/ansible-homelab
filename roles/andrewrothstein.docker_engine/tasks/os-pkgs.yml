@@ -1,0 +1,7 @@
+---
+- name: Install docker engine packages
+  become: true
+  become_user: root
+  ansible.builtin.package:
+    name: '{{ docker_engine_pkgs }}'
+    state: '{{ docker_engine_package_state | default("present") }}'

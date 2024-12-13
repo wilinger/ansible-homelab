@@ -1,0 +1,14 @@
+---
+- name: Adding yum repos...
+  become: true
+  become_user: root
+  with_items: '{{ docker_engine_yum_repos }}'
+  ansible.builtin.yum_repository:
+    name: '{{ item.name }}'
+    description: '{{ item.description }}'
+    baseurl: '{{ docker_engine_yum_repo_params.mirror }}/{{ item.mirrored_path }}'
+    enabled: '{{ item.enabled | default(False) }}'
+    gpgcheck: true
+    gpgkey: '{{ docker_engine_yum_repo_params.gpgkey }}'
+- name: Installing OS pkgs...
+  ansible.builtin.include_tasks: os-pkgs.yml

@@ -1,0 +1,22 @@
+galaxy_info:
+  author: maxhoesel
+  description: Installs and configures ddclient
+  role_name: ddclient
+
+  license: license GPL-3.0-or-later
+
+  min_ansible_version: 2.9
+
+  platforms:
+    - name: Ubuntu
+      versions:
+        - bionic
+        - focal
+    - name: Debian
+      versions:
+        - buster
+        - bullseye
+
+  galaxy_tags: ["ddclient"]
+
+dependencies: []

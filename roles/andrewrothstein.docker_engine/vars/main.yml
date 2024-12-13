@@ -1,0 +1,44 @@
+---
+# vars file for docker_engine
+docker_engine_package_state: '{% if docker_engine_upgrade is defined and docker_engine_upgrade %}latest{% else %}present{% endif %}'
+docker_engine_update_homebrew: '{% if docker_engine_upgrade is defined and docker_engine_upgrade %}yes{% else %}no{% endif %}'
+docker_engine_eff_init: '{{ docker_engine_init | default("systemd") }}'
+
+docker_engine_yum_repos:
+  - name: docker-ce-stable
+    description: Docker CE Stable - $basearch
+    mirrored_path: $basearch/stable
+    enabled: true
+  - name: docker-ce-stable-debuginfo
+    description: Docker CE Stable - Debuginfo $basearch
+    mirrored_path: debug-$basearch/stable
+  - name: docker-ce-stable-source
+    description: Docker CE Stable - Sources
+    mirrored_path: source/stable
+  - name: docker-ce-edge
+    description: Docker CE Edge - $basearch
+    mirrored_path: $basearch/edge
+  - name: docker-ce-edge-debuginfo
+    description: Docker CE Edge - Debuginfo $basearch
+    mirrored_path: debug-$basearch/edge
+  - name: docker-ce-edge-source
+    description: Docker CE Edge - Sources
+    mirrored_path: source/edge
+  - name: docker-ce-test
+    description: Docker CE Test - $basearch
+    mirrored_path: $basearch/test
+  - name: docker-ce-test-debuginfo
+    description: Docker CE Test - Debuginfo $basearch
+    mirrored_path: debug-$basearch/test
+  - name: docker-ce-test-source
+    description: Docker CE Test - Sources
+    mirrored_path: source/test
+  - name: docker-ce-nightly
+    description: Docker CE Nightly - $basearch
+    mirrored_path: $basearch/nightly
+  - name: docker-ce-nightly-debuginfo
+    description: Docker CE Nightly - Debuginfo $basearch
+    mirrored_path: debug-$basearch/nightly
+  - name: docker-ce-nightly-source
+    description: Docker CE Nightly - Sources
+    mirrored_path: source/nightly

@@ -1,0 +1,5 @@
+---
+- name: restart ddclient
+  service:
+    name: "{{ ddclient_systemd_unit }}"
+    state: restarted

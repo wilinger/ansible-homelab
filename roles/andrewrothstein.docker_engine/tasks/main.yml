@@ -1,0 +1,73 @@
+---
+- name: Resolve platform specific vars
+  ansible.builtin.include_vars: '{{ item }}'
+  with_first_found:
+    - files:
+        - '{{ ansible_distribution }}-{{ ansible_distribution_release }}.yml'
+        - '{{ ansible_distribution }}.yml'
+        - '{{ ansible_os_family }}.yml'
+      skip: true
+      paths:
+        - '{{ role_path }}/vars'
+
+
+- name: Install docker engine OS pkg deps
+  become: true
+  become_user: root
+  ansible.builtin.package:
+    name: '{{ docker_engine_os_pkgs | default([]) }}'
+    state: '{{ docker_engine_package_state | default("present") }}'
+
+- name: Install docker engine addl OS pkg deps
+  become: true
+  become_user: root
+  when:
+    - docker_engine_addl_pkgs is defined
+    - docker_engine_additions is defined
+    - docker_engine_additions in docker_engine_addl_pkgs
+  ansible.builtin.package:
+    name: '{{ docker_engine_addl_pkgs[docker_engine_additions] }}'
+    state: '{{ docker_engine_package_state | default("present") }}'
+
+- name: Using {{ docker_engine_installer }} installer...
+  ansible.builtin.include_tasks: '{{ docker_engine_installer }}.yml'
+
+- name: Configuring the docker_enginer
+  when: docker_engine_daemon_json is defined
+  block:
+    - name: Mkdir /etc/docker...
+      become: true
+      become_user: root
+      ansible.builtin.file:
+        path: /etc/docker
+        state: directory
+        mode: '755'
+    - name: Write /etc/docker/daemon.json
+      become: true
+      become_user: root
+      notify: Docker_engine_restart
+      ansible.builtin.template:
+        src: daemon.json.j2
+        dest: /etc/docker/daemon.json
+        mode: '644'
+
+- name: Configure for private registries
+  when: docker_engine_private_registry_cas is defined
+  ansible.builtin.include_tasks: private-registry.yml
+
+- name: Install docker daemon keys/cert/cacert
+  when: docker_engine_tls.enabled
+  ansible.builtin.include_tasks: pki.yml
+
+- name: Configure {{ docker_engine_eff_init }} init...
+  when: docker_engine_eff_init in ["systemd", "upstart"]
+  ansible.builtin.include_tasks: init.yml
+
+- name: Start/enable docker
+  become: true
+  become_user: root
+  when: docker_engine_manage_service
+  ansible.builtin.service:
+    name: docker
+    state: '{{ docker_engine_state }}'
+    enabled: '{{ docker_engine_enabled }}'

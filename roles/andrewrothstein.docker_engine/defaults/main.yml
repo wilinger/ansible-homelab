@@ -1,0 +1,25 @@
+---
+# defaults file for docker_engine
+docker_engine_upgrade: false
+
+docker_engine_manage_service: true
+docker_engine_config_reload: true
+docker_engine_state: started
+docker_engine_enabled: true
+
+# install additional packages for a production installation
+# docker_engine_additions: lvm
+
+docker_engine_certs_d: /etc/docker/certs.d
+## Example for installing certs for private registries
+# docker_engine_private_registry_cas:
+#   - registry: registry.example.com:4567
+#     ca_cert: my-registry-ca.pem
+
+## override init system - currently support rc and systemd
+# docker_engine_init: systemd
+
+docker_engine_tls_dir: '{{ ansible_env.HOME }}/.docker'
+docker_engine_tls:
+  enabled: false
+#  pki_dir: ~/secrets

@@ -1,0 +1,17 @@
+---
+- name: Converge
+  hosts: all
+  tasks:
+    - name: "Include ddclient"
+      include_role:
+        name: "ddclient"
+      vars:
+        ddclient_executable_path: /usr/local/bin/ddclient-test
+        ddclient_configfile: /etc/ddclient-test.conf
+        ddclient_pidfile: /var/run/ddclient-test.pid
+        ddclient_systemd_unit: ddclient-test
+        ddclient_strategy_usev4: ipv4
+        ddclient_strategy_webv4: 127.0.0.1
+        # Get the IPv6 address from eth0
+        ddclient_strategy_usev6: ifv6
+        ddclient_strategy_ifv6: eth0

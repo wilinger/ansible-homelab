@@ -1,0 +1,36 @@
+# {{ ansible_managed }}
+
+# General configuration
+daemon={{ ddclient_interval }}
+syslog=yes
+mail={{ ddclient_mail }}
+mail-failure={{ ddclient_mail_failure }}
+pid={{ ddclient_pidfile }}
+ssl=yes
+
+# IPv4 strategy configuration
+{% for var in query('varnames', '^ddclient_strategy_.*v4.*$') %}
+{{ var|replace('ddclient_strategy_', '') }}={{ lookup('vars', var) }}
+{% endfor %}
+
+# IPv6 strategy configuration
+{% for var in query('varnames', '^ddclient_strategy_.*v6.*$') %}
+{{ var|replace('ddclient_strategy_', '')|replace('_', '-') }}={{ lookup('vars', var)  }}
+{% endfor %}
+
+# Misc Parameters
+{% if ddclient_strategy_fw_login is defined %}
+fw-login={{ ddclient_strategy_fw_login }}
+{% endif %}
+{% if ddclient_strategy_fw_password is defined %}
+fw-password={{ ddclient_strategy_fw_password }}
+{% endif %}
+
+# Domain entries
+{% for entry in ddclient_entries %}
+{% for option in entry.options.keys() %}
+{{ option }}={{ entry.options[option] }}
+{% endfor %}
+{{ entry.domains | join(",") }}
+
+{% endfor %}

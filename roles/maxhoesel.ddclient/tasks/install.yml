@@ -1,0 +1,27 @@
+- name: Dependencies are installed
+  apt:
+    name:
+      - git
+      - debconf
+      - lsb-base
+      - perl
+      - libio-socket-ssl-perl
+      - libdata-validate-ip-perl
+
+- block:
+    - name: Download ddclient repo
+      git:
+        repo: "https://github.com/ddclient/ddclient"
+        version: "{{ ddclient_version }}"
+        dest: /tmp/ddclient
+        depth: 1
+
+    - name: Install ddclient binary
+      command: "cp /tmp/ddclient/ddclient.in {{ ddclient_executable_path }}"
+  always:
+    - name: remove ddclient installer files
+      file:
+        path: "{{ item }}"
+        state: absent
+      loop:
+        - "/tmp/ddclient"

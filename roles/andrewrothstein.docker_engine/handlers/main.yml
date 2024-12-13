@@ -1,0 +1,20 @@
+---
+# handlers file for docker_engine
+- name: Docker_engine_reconfigure
+  become: true
+  become_user: root
+  when:
+    - docker_engine_manage_service | bool
+    - docker_engine_config_reload | bool
+    - docker_engine_eff_init == 'systemd'
+  ansible.builtin.systemd:
+    daemon_reload: true
+- name: Docker_engine_restart
+  become: true
+  become_user: root
+  when:
+    - docker_engine_manage_service | bool
+    - docker_engine_config_reload | bool
+  ansible.builtin.service:
+    name: docker
+    state: restarted

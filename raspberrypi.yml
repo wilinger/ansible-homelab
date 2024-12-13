@@ -30,7 +30,7 @@
           - "{{ deploy_user }}"
         security_sudoers_passwordless:
           - "{{ deploy_user }}"
-        security_autoupdate_mail_to: "wil831@gmail.com"
+        security_autoupdate_mail_to: "{{ lookup('env','SECURITY_AUTOUPDATE_MAIL_TO') }}"
         security_autoupdate_mail_on_error: true
         security_fail2ban_enabled: true
         security_fail2ban_custom_configuration_template: "jail.local.j2"
@@ -40,7 +40,28 @@
       - "origin=Raspbian,codename=${distro_codename},label=Raspbian"
       - "origin=Debian,codename=${distro_codename}-security,label=Debian-Security"
       unattended_package_blacklist: [cowsay, vim]
-      unattended_mail: 'wil831@gmail.com'
+      unattended_mail: "{{ lookup('env','UNATTENDED_MAIL') }}"
 
     # - role: pihole-ufw
     #   when: inventory_hostname == 'pihole'
+
+    - role: maxhoesel.ddclient
+      vars:
+        ddclient_version: master
+        ddclient_configfile: /etc/ddclient/ddclient.conf
+        ddclient_entries:
+        - options:
+            protocol: cloudflare
+            zone: "{{ lookup('env','CF_ZONE') }}"
+            ttl: 1 # automatic
+            login: "{{ lookup('env','CF_LOGIN') }}"
+            password: "{{ lookup('env','CF_PASSWORD') }}"
+          domains:
+            - "{{ lookup('env','CF_DOMAIN1') }}"
+            - "{{ lookup('env','CF_DOMAIN2') }}"
+        # Determine the IPv4 address using dyndns
+        ddclient_strategy_usev4: webv4
+        ddclient_strategy_webv4: dyndns
+        # Get the IPv6 address from eth0
+        ddclient_stragety_usev6: ifv4
+        ddclient_strategy_ifv6: eth0

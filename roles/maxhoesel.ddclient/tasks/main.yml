@@ -1,0 +1,44 @@
+---
+- name: Check if ddclient is installed
+  stat:
+    path: "{{ ddclient_executable_path }}"
+  register: _ddclient_exec
+
+- name: Install ddclient
+  include_tasks: install.yml
+  when: not _ddclient_exec.stat.exists
+
+- name: ddclient directories are present
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: root
+    group: root
+    mode: "750"
+  loop:
+    - /var/cache/ddclient
+
+- name: ddclient config is installed
+  template:
+    src: ddclient.conf.j2
+    dest: "{{ ddclient_configfile }}"
+    owner: root
+    group: root
+    mode: "600"
+  notify: restart ddclient
+
+- name: ddclient unit file is installed
+  template:
+    src: ddclient.service.j2
+    dest: "/etc/systemd/system/{{ ddclient_systemd_unit }}.service"
+    owner: root
+    group: root
+    mode: "644"
+  notify: restart ddclient
+
+- name: ddclient daemon is enabled and running
+  systemd:
+    name: "{{ ddclient_systemd_unit }}.service"
+    state: started
+    enabled: yes
+    daemon_reload: yes
